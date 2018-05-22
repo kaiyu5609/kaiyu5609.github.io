@@ -432,12 +432,12 @@
             <h3 id="一、深入浅出MySQL数据库"><a href="#一、深入浅出MySQL数据库" class="headerlink" title="一、深入浅出MySQL数据库"></a>一、深入浅出MySQL数据库</h3><ol>
 <li><p>什么是数据库？</p>
 <ul>
-<li><p>数据库(Database)是按照数据结构来组织、存储和管理数据的仓库</p>
+<li><p>数据库<code>(Database)</code>是按照数据结构来组织、存储和管理数据的仓库</p>
 </li>
-<li><p>常见的数据库<br>  Oracle、DB2、SQL Server、Postgre SQL、MySQL</p>
+<li><p>常见的数据库<br>  <code>Oracle</code>、<code>DB2</code>、<code>SQL Server</code>、<code>Postgre SQL</code>、<code>MySQL</code></p>
 </li>
-<li><p>相关术语<br>  数据库系统(Database System):DBS，包括数据库(Database)、数据库管理系统(Database Management System):DBMS、应用开发工具、管理员及用户</p>
-<p>  SQL语言：Structured Query Language，结构化查询语言，包括DDL(数据定义语言)、DML(数据操作语言)、DQL(数据查询语言)、DCL(数据控制语言)</p>
+<li><p>相关术语<br>  数据库系统<code>(Database System):DBS</code>，包括数据库<code>(Database)</code>、数据库管理系统<code>(Database Management System):DBMS</code>、应用开发工具、管理员及用户</p>
+<p>  SQL语言：<code>Structured Query Language</code>，结构化查询语言，包括<code>DDL(数据定义语言)</code>、<code>DML(数据操作语言)</code>、<code>DQL(数据查询语言)</code>、<code>DCL(数据控制语言)</code></p>
 </li>
 </ul>
 </li>
@@ -445,15 +445,15 @@
 <ul>
 <li><p>登录/退出MySQL</p>
 <ul>
-<li><p>配置文件<br>  my.cnf是MySQL的配置文件</p>
+<li><p>配置文件<br>  <code>my.cnf</code>是MySQL的配置文件</p>
 </li>
-<li><p>登录MySQL<br>  mysql -uroot -p<br>  mysql -uroot -proot  (密码为root)</p>
+<li><p>登录MySQL<br>  <code>mysql -uroot -p</code><br>  <code>mysql -uroot -proot</code>  (密码为root)</p>
 </li>
-<li><p>查看MySQL版本<br>  mysql -V<br>  mysql –version</p>
+<li><p>查看MySQL版本<br>  <code>mysql -V</code><br>  <code>mysql --version</code></p>
 </li>
-<li><p>登录的同事打开指定数据库<br>  mysql -uroot -p -D db_name</p>
+<li><p>登录的同事打开指定数据库<br>  <code>mysql -uroot -p -D db_name</code></p>
 </li>
-<li><p>退出MySQL<br>  exit<br>  quit</p>
+<li><p>退出MySQL<br>  <code>exit</code><br>  <code>quit</code></p>
 </li>
 <li><p>登录信息中需要掌握的<br>  命令行结束符默认使用<code>;</code>或者<code>\g</code>来结束<br>  可以通过<code>help</code>或者<code>\h</code>或者<code>?</code>加上相关关键字来查看手册<br>  <code>\c</code>可以取消当前命令的执行</p>
 </li>
@@ -468,11 +468,11 @@
 </li>
 <li><p>常用SQL语句</p>
 <ul>
-<li>SELECT USER() 获取登录的用户</li>
-<li>SELECT VERSION() 获取MySQL的版本信息</li>
-<li>SELECT NOW() 获取当前的日期时间</li>
-<li>SELECT DATABASE() 获取当前打开的数据库</li>
-<li>SHOW WARNINGS 查看上一步操作产生的警告信息</li>
+<li><code>SELECT USER();</code> 获取登录的用户</li>
+<li><code>SELECT VERSION();</code> 获取MySQL的版本信息</li>
+<li><code>SELECT NOW();</code> 获取当前的日期时间</li>
+<li><code>SELECT DATABASE();</code> 获取当前打开的数据库</li>
+<li><code>SHOW WARNINGS;</code> 查看上一步操作产生的警告信息</li>
 <li>MySQL的注释：<code>#</code>或者<code>--</code></li>
 </ul>
 </li>
@@ -482,42 +482,42 @@
 <ul>
 <li><p>创建数据库</p>
 <ul>
-<li>CREATE {DATABASE|SCHEMA} db_name;</li>
-<li>检测数据库名称是否存在，不存在则创建：CREATE DATABASE [IF NOT EXISTS] db_name;</li>
-<li>在创建数据库的同时指定编码方式：CREATE DATABASE [IF NOT EXISTS] db_name [DEFAULT] CHARACTER SET [=] charset;</li>
+<li><code>CREATE {DATABASE|SCHEMA} db_name;</code></li>
+<li>检测数据库名称是否存在，不存在则创建：<code>CREATE DATABASE [IF NOT EXISTS] db_name;</code></li>
+<li>在创建数据库的同时指定编码方式：<code>CREATE DATABASE [IF NOT EXISTS] db_name [DEFAULT] CHARACTER SET [=] charset;</code></li>
 <li>注意：数据库名称最好有意义；名称不能包含特殊字符或者是MySQL关键字</li>
 </ul>
 </li>
 <li><p>查看当前服务器下全部数据库</p>
 <ul>
-<li>SHOW DATABASES|SCHEMAS;</li>
+<li><code>SHOW DATABASES|SCHEMAS;</code></li>
 </ul>
 </li>
 <li><p>查看指定数据库的详细信息</p>
 <ul>
-<li>SHOW DREATE DATABASE db_name;</li>
+<li><code>SHOW DREATE DATABASE db_name;</code></li>
 </ul>
 </li>
 <li><p>修改指定数据库的编码方式</p>
 <ul>
-<li>ALTER DATABASE db_name [DEFAULT] CHARACTER SET [=] charset;</li>
+<li><code>ALTER DATABASE db_name [DEFAULT] CHARACTER SET [=] charset;</code></li>
 </ul>
 </li>
 <li><p>打开指定数据库</p>
 <ul>
-<li>USE db_name;</li>
+<li><code>USE db_name;</code></li>
 </ul>
 </li>
 <li><p>获取当前打开的数据库</p>
 <ul>
-<li>SELECT DATABASE();</li>
-<li>SELECT SCHEMA();</li>
+<li><code>SELECT DATABASE();</code></li>
+<li><code>SELECT SCHEMA();</code></li>
 </ul>
 </li>
 <li><p>删除指定数据库</p>
 <ul>
-<li>DROP DATABASE db_name;</li>
-<li>如果数据库存在则删除：DROP DATABASE [IF EXISTS] db_name;</li>
+<li><code>DROP DATABASE db_name;</code></li>
+<li>如果数据库存在则删除：<code>DROP DATABASE [IF EXISTS] db_name;</code></li>
 </ul>
 </li>
 </ul>
@@ -534,7 +534,7 @@
 </li>
 <li><p>创建数据表</p>
 <ul>
-<li>CREATE TABLE [IF NOT EXISTS] tbl_name(<br>  字段名称 字段类型 [完整性约束条件],<br>  字段名称 字段类型 [完整性约束条件],<br>  …<br>)</li>
+<li><code>CREATE TABLE [IF NOT EXISTS] tbl_name( 字段名称 字段类型 [完整性约束条件], 字段名称 字段类型 [完整性约束条件], ... );</code></li>
 </ul>
 </li>
 </ul>
