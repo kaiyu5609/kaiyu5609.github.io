@@ -1808,7 +1808,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff78aa;
+  background: #985441;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2972,6 +2972,10 @@ pre .javascript .function {
 ol,
 ul {
   padding-left: 20px;
+}
+ol li > p,
+ul li > p {
+  margin: 10px 0;
 }
 .highlight .gutter pre {
   padding-left: 5px;

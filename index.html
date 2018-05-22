@@ -325,6 +325,284 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/22/MySQL入门之简介/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengChe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风车's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/22/MySQL入门之简介/" itemprop="url">MySQL入门之简介</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-22T20:49:01+08:00">
+                2018-05-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/22/MySQL入门之简介/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/22/MySQL入门之简介/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、深入浅出MySQL数据库"><a href="#一、深入浅出MySQL数据库" class="headerlink" title="一、深入浅出MySQL数据库"></a>一、深入浅出MySQL数据库</h3><ol>
+<li><p>什么是数据库？</p>
+<ul>
+<li><p>数据库(Database)是按照数据结构来组织、存储和管理数据的仓库</p>
+</li>
+<li><p>常见的数据库<br>  Oracle、DB2、SQL Server、Postgre SQL、MySQL</p>
+</li>
+<li><p>相关术语<br>  数据库系统(Database System):DBS，包括数据库(Database)、数据库管理系统(Database Management System):DBMS、应用开发工具、管理员及用户</p>
+<p>  SQL语言：Structured Query Language，结构化查询语言，包括DDL(数据定义语言)、DML(数据操作语言)、DQL(数据查询语言)、DCL(数据控制语言)</p>
+</li>
+</ul>
+</li>
+<li><p>MySQL相关操作</p>
+<ul>
+<li><p>登录/退出MySQL</p>
+<ul>
+<li><p>配置文件<br>  my.cnf是MySQL的配置文件</p>
+</li>
+<li><p>登录MySQL<br>  mysql -uroot -p<br>  mysql -uroot -proot  (密码为root)</p>
+</li>
+<li><p>查看MySQL版本<br>  mysql -V<br>  mysql –version</p>
+</li>
+<li><p>登录的同事打开指定数据库<br>  mysql -uroot -p -D db_name</p>
+</li>
+<li><p>退出MySQL<br>  exit<br>  quit</p>
+</li>
+<li><p>登录信息中需要掌握的<br>  命令行结束符默认使用<code>;</code>或者<code>\g</code>来结束<br>  可以通过<code>help</code>或者<code>\h</code>或者<code>?</code>加上相关关键字来查看手册<br>  <code>\c</code>可以取消当前命令的执行</p>
+</li>
+</ul>
+</li>
+<li><p>SQL语句语法规范</p>
+<ul>
+<li>常用MySQL的关键字我们需要大写，库名、表名、字段名称等使用小写</li>
+<li>SQL语句支持折行操作，拆分的时候不能把完整单词拆开</li>
+<li>数据库名称、表名称、字段名称不要使用MySQL的保留字，如果必须要使用，需要用反引号``将其括起来</li>
+</ul>
+</li>
+<li><p>常用SQL语句</p>
+<ul>
+<li>SELECT USER() 获取登录的用户</li>
+<li>SELECT VERSION() 获取MySQL的版本信息</li>
+<li>SELECT NOW() 获取当前的日期时间</li>
+<li>SELECT DATABASE() 获取当前打开的数据库</li>
+<li>SHOW WARNINGS 查看上一步操作产生的警告信息</li>
+<li>MySQL的注释：<code>#</code>或者<code>--</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>数据库相关操作</p>
+<ul>
+<li><p>创建数据库</p>
+<ul>
+<li>CREATE {DATABASE|SCHEMA} db_name;</li>
+<li>检测数据库名称是否存在，不存在则创建：CREATE DATABASE [IF NOT EXISTS] db_name;</li>
+<li>在创建数据库的同时指定编码方式：CREATE DATABASE [IF NOT EXISTS] db_name [DEFAULT] CHARACTER SET [=] charset;</li>
+<li>注意：数据库名称最好有意义；名称不能包含特殊字符或者是MySQL关键字</li>
+</ul>
+</li>
+<li><p>查看当前服务器下全部数据库</p>
+<ul>
+<li>SHOW DATABASES|SCHEMAS;</li>
+</ul>
+</li>
+<li><p>查看指定数据库的详细信息</p>
+<ul>
+<li>SHOW DREATE DATABASE db_name;</li>
+</ul>
+</li>
+<li><p>修改指定数据库的编码方式</p>
+<ul>
+<li>ALTER DATABASE db_name [DEFAULT] CHARACTER SET [=] charset;</li>
+</ul>
+</li>
+<li><p>打开指定数据库</p>
+<ul>
+<li>USE db_name;</li>
+</ul>
+</li>
+<li><p>获取当前打开的数据库</p>
+<ul>
+<li>SELECT DATABASE();</li>
+<li>SELECT SCHEMA();</li>
+</ul>
+</li>
+<li><p>删除指定数据库</p>
+<ul>
+<li>DROP DATABASE db_name;</li>
+<li>如果数据库存在则删除：DROP DATABASE [IF EXISTS] db_name;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>数据表相关操作</p>
+<ul>
+<li><p>数据表</p>
+<ul>
+<li>是数据库最重要的组成部分之一，数据是保存在数据表中</li>
+<li>数据表由行(row)和列(column)来组成</li>
+<li>每个数据表中至少有一列，行可以有零行一行或者多行组成</li>
+<li>表名要求唯一，不要包含特殊字符，最好含义明确</li>
+</ul>
+</li>
+<li><p>创建数据表</p>
+<ul>
+<li>CREATE TABLE [IF NOT EXISTS] tbl_name(<br>  字段名称 字段类型 [完整性约束条件],<br>  字段名称 字段类型 [完整性约束条件],<br>  …<br>)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>MySQL中的数据类型</p>
+<ul>
+<li><p>数值型</p>
+<ul>
+<li>整数型</li>
+<li>浮点数</li>
+<li>定点数</li>
+</ul>
+</li>
+<li><p>字符串类型</p>
+</li>
+<li><p>日期时间类型</p>
+</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/Java入门之集合框架/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2133,164 +2411,6 @@ eg：com.fengche.music.*
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/06/JSkata/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengChe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="风车's Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/06/JSkata/" itemprop="url">JSkata</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-06T23:53:14+08:00">
-                2017-09-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/suibi/" itemprop="url" rel="index">
-                    <span itemprop="name">随笔</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/09/06/JSkata/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/09/06/JSkata/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h5 id="组件编写"><a href="#组件编写" class="headerlink" title="组件编写"></a>组件编写</h5><h6 id="step1"><a href="#step1" class="headerlink" title="step1"></a>step1</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> should = <span class="built_in">require</span>(<span class="string">'should'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> Class = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> klass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">    <span class="keyword">return</span> klass;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">describe(<span class="string">'要有自己的框架'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    it(<span class="string">'要有类'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class();</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person();</div><div class="line">    	o.should.be.ok;</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h6 id="step2"><a href="#step2" class="headerlink" title="step2"></a>step2</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> should = <span class="built_in">require</span>(<span class="string">'should'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> Class = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> klass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">    <span class="keyword">return</span> klass;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">describe(<span class="string">'要有自己的框架'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    it(<span class="string">'要有类'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class();</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person();</div><div class="line">    	o.should.be.ok;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    it(<span class="string">'要有方法'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class(&#123;</div><div class="line">            show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</div><div class="line">            sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">    	&#125;);</div><div class="line">    	<span class="comment">// var o = new Person();</span></div><div class="line">        <span class="keyword">var</span> o = &#123;&#125;;</div><div class="line">        o.__proto__ = &#123;</div><div class="line">            show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</div><div class="line">            sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">        &#125;;</div><div class="line">        Person.call(o);</div><div class="line"></div><div class="line">    	o.should.have.properties(<span class="string">'show'</span>, <span class="string">'sayHello'</span>);</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h6 id="step3"><a href="#step3" class="headerlink" title="step3"></a>step3</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> should = <span class="built_in">require</span>(<span class="string">'should'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> Class = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> klass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">    <span class="keyword">return</span> klass;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">describe(<span class="string">'要有自己的框架'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    it(<span class="string">'要有类'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class();</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person();</div><div class="line">    	o.should.be.ok;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    it(<span class="string">'要有方法'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class(&#123;</div><div class="line">            show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</div><div class="line">            sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">    	&#125;);</div><div class="line"></div><div class="line">    	Person.prototype = &#123;</div><div class="line">            show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</div><div class="line">            sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">    	&#125;;</div><div class="line"></div><div class="line">    	<span class="comment">// var o = new Person();</span></div><div class="line">    	<span class="keyword">var</span> o = &#123;&#125;;</div><div class="line">    	o.__proto__ = Person.prototype;</div><div class="line">    	Person.call(o);</div><div class="line"></div><div class="line">    	o.should.have.properties(<span class="string">'show'</span>, <span class="string">'sayHello'</span>);</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h6 id="step4"><a href="#step4" class="headerlink" title="step4"></a>step4</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> should = <span class="built_in">require</span>(<span class="string">'should'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> Class = <span class="function"><span class="keyword">function</span>(<span class="params">options</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> klass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> method <span class="keyword">in</span> options) &#123;</div><div class="line">        klass.prototype[method] = options[method];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> klass;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">describe(<span class="string">'要有自己的框架'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    it(<span class="string">'要有类'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class();</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person();</div><div class="line">    	o.should.be.ok;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    it(<span class="string">'要有方法'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class(&#123;</div><div class="line">            show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</div><div class="line">            sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">    	&#125;);</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person();</div><div class="line">    	o.should.have.properties(<span class="string">'show'</span>, <span class="string">'sayHello'</span>);</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h6 id="step5"><a href="#step5" class="headerlink" title="step5"></a>step5</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> should = <span class="built_in">require</span>(<span class="string">'should'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> Class = <span class="function"><span class="keyword">function</span>(<span class="params">options</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> klass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">if</span> (<span class="keyword">this</span>.init) &#123;</div><div class="line">            <span class="keyword">this</span>.init.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</div><div class="line">    	&#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> method <span class="keyword">in</span> options) &#123;</div><div class="line">    	klass.prototype[method] = options[method];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> klass;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">describe(<span class="string">'要有自己的框架'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    it(<span class="string">'要有类'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class();</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person();</div><div class="line">    	o.should.be.ok;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    it(<span class="string">'要有方法'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class(&#123;</div><div class="line">            show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</div><div class="line">            sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">    	&#125;);</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person();</div><div class="line">    	o.should.have.properties(<span class="string">'show'</span>, <span class="string">'sayHello'</span>);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    it(<span class="string">'要有构造函数'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class(&#123;</div><div class="line">            init: <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">            	<span class="keyword">this</span>.name = name;</div><div class="line">            &#125;,</div><div class="line">            show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</div><div class="line">            sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">    	&#125;);</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person(<span class="string">'dhuang'</span>);</div><div class="line">    	o.name.should.eql(<span class="string">'dhuang'</span>);</div><div class="line">    	o.should.have.properties(<span class="string">'show'</span>, <span class="string">'sayHello'</span>);</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h6 id="step6"><a href="#step6" class="headerlink" title="step6"></a>step6</h6><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> should = <span class="built_in">require</span>(<span class="string">'should'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> Class = <span class="function"><span class="keyword">function</span>(<span class="params">options</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> klass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">if</span> (<span class="keyword">this</span>.init) &#123;</div><div class="line">            <span class="keyword">this</span>.init.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</div><div class="line">    	&#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> method <span class="keyword">in</span> options) &#123;</div><div class="line">    	klass.prototype[method] = options[method];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    klass.extends = <span class="function"><span class="keyword">function</span>(<span class="params">options</span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> child = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.init) &#123;</div><div class="line">            	<span class="keyword">this</span>.init.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        <span class="keyword">var</span> F = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">        F.prototype = <span class="keyword">this</span>.prototype;</div><div class="line">        child.prototype = <span class="keyword">new</span> F();</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> method <span class="keyword">in</span> options) &#123;</div><div class="line">            child.prototype[method] = options[method];</div><div class="line">        &#125;</div><div class="line">        child.prototype.super = <span class="keyword">this</span>.prototype;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> child;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> klass;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">describe(<span class="string">'要有自己的框架'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    it(<span class="string">'要有类'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class();</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person();</div><div class="line">    	o.should.be.ok;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    it(<span class="string">'要有方法'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class(&#123;</div><div class="line">            show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</div><div class="line">            sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">    	&#125;);</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person();</div><div class="line">    	o.should.have.properties(<span class="string">'show'</span>, <span class="string">'sayHello'</span>);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    it(<span class="string">'要有构造函数'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class(&#123;</div><div class="line">            init: <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">            	<span class="keyword">this</span>.name = name;</div><div class="line">            &#125;,</div><div class="line">            show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</div><div class="line">            sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">    	&#125;);</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Person(<span class="string">'dhuang'</span>);</div><div class="line">    	o.name.should.eql(<span class="string">'dhuang'</span>);</div><div class="line">    	o.should.have.properties(<span class="string">'show'</span>, <span class="string">'sayHello'</span>);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    it(<span class="string">'要有复用'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    	<span class="keyword">var</span> Person = <span class="keyword">new</span> Class(&#123;</div><div class="line">            show: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">    	&#125;);</div><div class="line">    	<span class="keyword">var</span> Customer = Person.extends(&#123;</div><div class="line">            init: <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">            	<span class="keyword">this</span>.name = name;</div><div class="line">            &#125;,</div><div class="line">            sayHello: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">    	&#125;);</div><div class="line">    	<span class="keyword">var</span> o = <span class="keyword">new</span> Customer(<span class="string">'dh'</span>);</div><div class="line">    	o.name.should.eql(<span class="string">'dh'</span>);</div><div class="line">    	o.should.have.properties(<span class="string">'show'</span>, <span class="string">'sayHello'</span>);</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2341,7 +2461,7 @@ eg：com.fengche.music.*
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2352,7 +2472,7 @@ eg：com.fengche.music.*
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2363,7 +2483,7 @@ eg：com.fengche.music.*
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
