@@ -1808,7 +1808,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #c32d1c;
+  background: #82f4e8;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2998,4 +2998,8 @@ ul li > p {
   .posts-expand {
     margin: 0 15px;
   }
+}
+.post .post-body code {
+  color: #984401;
+  background-color: #f8f5ec;
 }
