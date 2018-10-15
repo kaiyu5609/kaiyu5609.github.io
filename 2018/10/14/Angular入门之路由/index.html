@@ -96,7 +96,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Java," />
+  <meta name="keywords" content="JavaScript,Angular," />
 
 
 
@@ -112,18 +112,18 @@
 
 
 
-<meta name="description" content="一、Java中的继承 继承的概念：继承是类与类的一种关系。注：Java中的继承是单继承 继承的好处：子类拥有父类的所有属性和方法，除了private修饰的。实现代码复用 语法规则：class 子类 extends 父类  二、Java中的方法重写 什么是方法的重写：如果子类对继承父类的方法不满意，是可以重写父类继承的方法的，当调用方法时会优先调用子类的方法。 语法规则： a. 返回值类型 b. 方">
-<meta name="keywords" content="Java">
+<meta name="description" content="Angular路由的基础知识 路由内容 基本用法 子路由、保护路由和辅助路由       名称 简介     Routes 路由配置，保存着哪个URL对应展示哪个组件，以及在哪个RouteOutlet中展示组件   RouterOutlet 在html中标记路由内容呈现位置的占位符指令   Router 负责在运行时执行路由的对象，可以通过调用其navigate()和navigateByUrl()">
+<meta name="keywords" content="JavaScript,Angular">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java入门之继承">
-<meta property="og:url" content="http://yoursite.com/2018/04/28/Java入门之继承/index.html">
+<meta property="og:title" content="Angular入门之路由">
+<meta property="og:url" content="http://yoursite.com/2018/10/14/Angular入门之路由/index.html">
 <meta property="og:site_name" content="风车&#39;s Notes">
-<meta property="og:description" content="一、Java中的继承 继承的概念：继承是类与类的一种关系。注：Java中的继承是单继承 继承的好处：子类拥有父类的所有属性和方法，除了private修饰的。实现代码复用 语法规则：class 子类 extends 父类  二、Java中的方法重写 什么是方法的重写：如果子类对继承父类的方法不满意，是可以重写父类继承的方法的，当调用方法时会优先调用子类的方法。 语法规则： a. 返回值类型 b. 方">
+<meta property="og:description" content="Angular路由的基础知识 路由内容 基本用法 子路由、保护路由和辅助路由       名称 简介     Routes 路由配置，保存着哪个URL对应展示哪个组件，以及在哪个RouteOutlet中展示组件   RouterOutlet 在html中标记路由内容呈现位置的占位符指令   Router 负责在运行时执行路由的对象，可以通过调用其navigate()和navigateByUrl()">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-29T14:10:43.000Z">
+<meta property="og:updated_time" content="2018-10-14T04:06:49.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java入门之继承">
-<meta name="twitter:description" content="一、Java中的继承 继承的概念：继承是类与类的一种关系。注：Java中的继承是单继承 继承的好处：子类拥有父类的所有属性和方法，除了private修饰的。实现代码复用 语法规则：class 子类 extends 父类  二、Java中的方法重写 什么是方法的重写：如果子类对继承父类的方法不满意，是可以重写父类继承的方法的，当调用方法时会优先调用子类的方法。 语法规则： a. 返回值类型 b. 方">
+<meta name="twitter:title" content="Angular入门之路由">
+<meta name="twitter:description" content="Angular路由的基础知识 路由内容 基本用法 子路由、保护路由和辅助路由       名称 简介     Routes 路由配置，保存着哪个URL对应展示哪个组件，以及在哪个RouteOutlet中展示组件   RouterOutlet 在html中标记路由内容呈现位置的占位符指令   Router 负责在运行时执行路由的对象，可以通过调用其navigate()和navigateByUrl()">
 
 
 
@@ -152,13 +152,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/28/Java入门之继承/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/14/Angular入门之路由/"/>
 
 
 
 
 
-  <title>Java入门之继承 | 风车's Notes</title>
+  <title>Angular入门之路由 | 风车's Notes</title>
   
 
 
@@ -325,7 +325,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/28/Java入门之继承/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/14/Angular入门之路由/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FengChe">
@@ -342,7 +342,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java入门之继承</h1>
+          <h1 class="post-title" itemprop="name headline">Angular入门之路由</h1>
         
 
         <div class="post-meta">
@@ -354,8 +354,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-28T22:56:31+08:00">
-                2018-04-28
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-14T10:06:47+08:00">
+                2018-10-14
               </time>
             
 
@@ -377,8 +377,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
+                  <a href="/categories/Angular/" itemprop="url" rel="index">
+                    <span itemprop="name">Angular</span>
                   </a>
                 </span>
 
@@ -395,9 +395,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/04/28/Java入门之继承/#comments" itemprop="discussionUrl">
+                <a href="/2018/10/14/Angular入门之路由/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/04/28/Java入门之继承/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/10/14/Angular入门之路由/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -432,41 +432,81 @@
       
 
       
-        <h3 id="一、Java中的继承"><a href="#一、Java中的继承" class="headerlink" title="一、Java中的继承"></a>一、Java中的继承</h3><ol>
-<li>继承的概念：<br>继承是类与类的一种关系。注：Java中的继承是单继承</li>
-<li>继承的好处：<br>子类拥有父类的所有属性和方法，除了private修饰的。实现代码复用</li>
-<li>语法规则：<br>class 子类 extends 父类</li>
-</ol>
-<h3 id="二、Java中的方法重写"><a href="#二、Java中的方法重写" class="headerlink" title="二、Java中的方法重写"></a>二、Java中的方法重写</h3><ol>
-<li>什么是方法的重写：<br>如果子类对继承父类的方法不满意，是可以重写父类继承的方法的，当调用方法时会优先调用子类的方法。</li>
-<li>语法规则：<br> a. 返回值类型<br> b. 方法名<br> c. 参数类型及个数都要与父类继承的方法相同，才叫方法的重写。</li>
-</ol>
-<h3 id="三、继承的初始化顺序"><a href="#三、继承的初始化顺序" class="headerlink" title="三、继承的初始化顺序"></a>三、继承的初始化顺序</h3><ol>
-<li>初始化父类再初始化子类</li>
-<li>先执行初始化对象中属性，再执行构造方法中的初始化</li>
-</ol>
-<h3 id="四、Java中的final关键字"><a href="#四、Java中的final关键字" class="headerlink" title="四、Java中的final关键字"></a>四、Java中的final关键字</h3><p>使用final关键字做标识有“最终的”含义<br>final可以修饰类、方法、属性和变量</p>
-<pre><code>- final修饰类，则该类不允许被继承
-- final修饰方法，则该方法不允许被覆盖（重写）
-- final修饰属性，则该类的属性不会进行隐式的初始化（类的初始化属性必须有值），或在构造方法中赋值（但只能选其一）
-- final修饰变量，则该变量的值只能赋一次值，即变为常量
-</code></pre><h3 id="五、Java中的super关键字"><a href="#五、Java中的super关键字" class="headerlink" title="五、Java中的super关键字"></a>五、Java中的super关键字</h3><p>super关键字在对象的内部使用，可以代表父类对象。</p>
-<ol>
-<li>访问父类的属性：super.name;</li>
-<li>访问父类的方法：super.doSomething();</li>
-</ol>
-<p>super关键字的应用</p>
-<ol>
-<li>子类的构造过程中必须调用其父类的构造方法</li>
-<li>如果子类的构造方法中没有显示调用父类的构造方法，则系统默认调用父类无参的构造方法</li>
-<li>如果显示的调用构造方法，必须在子类的构造方法的第一行</li>
-<li>如果子类构造方法中既没有显示调用父类的构造方法，而父类又没有无参的构造方法，则编译出错</li>
-</ol>
-<h3 id="六、Java中的Object类"><a href="#六、Java中的Object类" class="headerlink" title="六、Java中的Object类"></a>六、Java中的Object类</h3><p>Object类是所有类的父类，如果一个类没有使用extends关键字明确标识继承另外一个类，那么这个类默认继承Object类。<br>Object类中的方法，适合所有子类。</p>
-<ol>
-<li>toString方法<br> 在Object类里面定义toString方法的时候返回的对象的哈希code码（对象地址字符串）<br> 可以通过重写toString方法表示出对象的属性</li>
-<li>equals方法<br> 比较的是对象的引用是否指向同一块内存地址<br> 一般情况下比较两个对象时比较他的值是否一致，所以要进行重写</li>
-</ol>
+        <h3 id="Angular路由的基础知识"><a href="#Angular路由的基础知识" class="headerlink" title="Angular路由的基础知识"></a><code>Angular</code>路由的基础知识</h3><ul>
+<li>路由内容<ul>
+<li>基本用法</li>
+<li>子路由、保护路由和辅助路由</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">简介</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>Routes</code></td>
+<td style="text-align:center"><code>路由配置</code>，保存着哪个URL对应展示哪个组件，以及在哪个<code>RouteOutlet</code>中展示组件</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>RouterOutlet</code></td>
+<td style="text-align:center">在html中标记路由内容呈现位置的<code>占位符指令</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Router</code></td>
+<td style="text-align:center">负责在运行时执行路由的对象，可以通过调用其<code>navigate()</code>和<code>navigateByUrl()</code>方法来导航到一个指定的路由</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>RouterLink</code></td>
+<td style="text-align:center">在html中声明路由导航用的指令</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>ActivatedRoute</code></td>
+<td style="text-align:center">当前激活的路由对象，保存着当前路由的信息，如路由<code>地址</code>，<code>路由参数</code>等</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>路由信息的配置文件（<code>app-routing.module.ts</code>）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; NgModule &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</div><div class="line"><span class="keyword">import</span> &#123; RouterModule, Routes &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</div><div class="line"><span class="keyword">import</span> &#123; HomeComponent &#125; <span class="keyword">from</span> <span class="string">'./home/home.component'</span>;</div><div class="line"><span class="keyword">import</span> &#123; DetailComponent &#125; <span class="keyword">from</span> <span class="string">'./detail/detail.component'</span>;</div><div class="line"><span class="keyword">import</span> &#123; Code404Component &#125; <span class="keyword">from</span> <span class="string">'./code404/code404.component'</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> routes: Routes = [&#123;</div><div class="line">    path: <span class="string">''</span>, <span class="attr">component</span>: HomeComponent,<span class="comment">// path 不要用'/'开头</span></div><div class="line">    path: <span class="string">'detail'</span>, <span class="attr">component</span>: DetailComponent,</div><div class="line">    path: <span class="string">'**'</span>, <span class="attr">component</span>: Code404Component,<span class="comment">// 404页面路由</span></div><div class="line">&#125;];</div><div class="line"></div><div class="line">@NgModule(&#123;</div><div class="line">    imports: [RouterModule.forRoot(routes)],</div><div class="line">    exports: [RouterModule]</div><div class="line">&#125;)</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AppRoutingModule</span> </span>&#123; &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>模板（<code>app-component.html</code>）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/']"</span>&gt;</span>主页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail']"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">value</span>=<span class="string">"详情页"</span> (<span class="attr">click</span>)=<span class="string">"toDetail()"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">router-outlet</span>&gt;</span><span class="tag">&lt;/<span class="name">router-outlet</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>使用 Router 在组件中进行路由导航（<code>app.component.ts</code>）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; Component &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</div><div class="line"><span class="keyword">import</span> &#123; Router &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</div><div class="line"></div><div class="line">@Component(&#123;</div><div class="line">    selector: <span class="string">'app-root'</span>,</div><div class="line">    templateUrl: <span class="string">'./app.component.html'</span>,</div><div class="line">    styleUrls: [<span class="string">'./app.component.css'</span>]</div><div class="line">&#125;)</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AppComponent</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>(private router: Router) &#123; &#125;</div><div class="line"></div><div class="line">    toDetail() &#123;</div><div class="line">        <span class="keyword">this</span>.router.navigate([<span class="string">'/detail'</span>]);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Angular在路由时传递数据"><a href="#Angular在路由时传递数据" class="headerlink" title="Angular在路由时传递数据"></a><code>Angular</code>在路由时传递数据</h3><ul>
+<li><p>在查询参数中传递数据</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 通过 ? 传递 queryParams --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail?id=1&amp;name=2']"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"><span class="comment">&lt;!-- 或者 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail']"</span> [<span class="attr">queryParams</span>]=<span class="string">"&#123;id:1,name:2&#125;"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在路由的目标组件中，通过以下方式获取</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</div><div class="line">    private id: number;</div><div class="line">    <span class="keyword">constructor</span>(private routeInfo: ActivatedRoute) &#123; &#125;</div><div class="line">    ngOnInit() &#123;</div><div class="line">        <span class="comment">// 快捷获取：snapshot方式（参数快照），即组件初始化时，id只赋值一次</span></div><div class="line">        <span class="keyword">this</span>.id = <span class="keyword">this</span>.routeInfo.snapshot.queryParams[<span class="string">'id'</span>];</div><div class="line"></div><div class="line">        <span class="comment">// 或者对参数进行订阅，在同一个组件中（DetailComponent）中切换参数时就得用订阅的方式</span></div><div class="line">        <span class="keyword">this</span>.routeInfo.queryParams.subscribe(<span class="function">(<span class="params">queryParams: QueryParams</span>) =&gt;</span> &#123;</div><div class="line">            <span class="keyword">this</span>.id = queryParams[<span class="string">'id'</span>];</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>在路由路径中传递数据</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail', 1]"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// routes</span></div><div class="line">&#123; <span class="attr">path</span>: <span class="string">'detail/:id'</span> &#125; <span class="comment">// /detail/1</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在路由的目标组件中，通过以下方式获取</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</div><div class="line">    private id: number;</div><div class="line">    <span class="keyword">constructor</span>(private routeInfo: ActivatedRoute) &#123; &#125;</div><div class="line">    ngOnInit() &#123;</div><div class="line">        <span class="comment">// 快捷获取：snapshot方式（参数快照），即组件初始化时，id只赋值一次</span></div><div class="line">        <span class="keyword">this</span>.id = <span class="keyword">this</span>.routeInfo.snapshot.params[<span class="string">'id'</span>];</div><div class="line"></div><div class="line">        <span class="comment">// 或者对参数进行订阅，在同一个组件中（DetailComponent）中切换参数时就得用订阅的方式</span></div><div class="line">        <span class="keyword">this</span>.routeInfo.params.subscribe(<span class="function">(<span class="params">params: Params</span>) =&gt;</span> &#123;</div><div class="line">            <span class="keyword">this</span>.id = params[<span class="string">'id'</span>];</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>在路由配置中传递数据</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// routes</span></div><div class="line">&#123; <span class="attr">path</span>: <span class="string">'detail'</span>, <span class="attr">component</span>: DetailComponent, <span class="attr">data</span>: [&#123; <span class="attr">isProd</span>: <span class="literal">true</span> &#125;] &#125; </div><div class="line"><span class="comment">// data 属性本身是一个数组，在数组中可以定义任意个对象，isProd: 是否是生产环境</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在路由的目标组件中，通过data的下标和属性名方式获取</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</div><div class="line">    private isProd: boolean;</div><div class="line">    <span class="keyword">constructor</span>(private routeInfo: ActivatedRoute) &#123; &#125;</div><div class="line">    ngOnInit() &#123;</div><div class="line">        <span class="keyword">this</span>.isProd = <span class="keyword">this</span>.routeInfo.snapshot.data[<span class="number">0</span>][<span class="string">'isProd'</span>];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Angular重定向路由"><a href="#Angular重定向路由" class="headerlink" title="Angular重定向路由"></a><code>Angular</code>重定向路由</h3><ul>
+<li>在用户访问一个特定的地址时，将其重定向到另一个指定的地址。</li>
+<li>即：我们想通过<code>localhost:4200</code>来重定向到<code>localhost:4200/home</code><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> routes: Routes = [&#123;</div><div class="line">    path: <span class="string">''</span>, <span class="attr">redirectTo</span>: <span class="string">'/home'</span>, <span class="attr">pathMatch</span>: <span class="string">'full'</span>,<span class="comment">// pathMatch: 'full' || 'prefix', 精准匹配 || 前缀匹配</span></div><div class="line">    path: <span class="string">'home'</span>, <span class="attr">component</span>: HomeComponent,</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Angular子路由"><a href="#Angular子路由" class="headerlink" title="Angular子路由"></a><code>Angular</code>子路由</h3><ul>
+<li><code>略</code><ul>
+<li><code>&#39;./&#39;</code></li>
+<li><code>children</code></li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -484,7 +524,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java/" rel="tag"># Java</a>
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/tags/Angular/" rel="tag"># Angular</a>
           
         </div>
       
@@ -497,8 +539,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/28/Java入门之封装/" rel="next" title="Java入门之封装">
-                <i class="fa fa-chevron-left"></i> Java入门之封装
+              <a href="/2018/09/22/Angular入门之简介/" rel="next" title="Angular入门之简介">
+                <i class="fa fa-chevron-left"></i> Angular入门之简介
               </a>
             
           </div>
@@ -506,10 +548,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/29/Java入门之多态/" rel="prev" title="Java入门之多态">
-                Java入门之多态 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -674,7 +712,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、Java中的继承"><span class="nav-number">1.</span> <span class="nav-text">一、Java中的继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Java中的方法重写"><span class="nav-number">2.</span> <span class="nav-text">二、Java中的方法重写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、继承的初始化顺序"><span class="nav-number">3.</span> <span class="nav-text">三、继承的初始化顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、Java中的final关键字"><span class="nav-number">4.</span> <span class="nav-text">四、Java中的final关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、Java中的super关键字"><span class="nav-number">5.</span> <span class="nav-text">五、Java中的super关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、Java中的Object类"><span class="nav-number">6.</span> <span class="nav-text">六、Java中的Object类</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Angular路由的基础知识"><span class="nav-number">1.</span> <span class="nav-text">Angular路由的基础知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Angular在路由时传递数据"><span class="nav-number">2.</span> <span class="nav-text">Angular在路由时传递数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Angular重定向路由"><span class="nav-number">3.</span> <span class="nav-text">Angular重定向路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Angular子路由"><span class="nav-number">4.</span> <span class="nav-text">Angular子路由</span></a></li></ol></div>
             
 
           </div>
@@ -854,9 +892,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2018/04/28/Java入门之继承/';
-          this.page.identifier = '2018/04/28/Java入门之继承/';
-          this.page.title = 'Java入门之继承';
+          this.page.url = 'http://yoursite.com/2018/10/14/Angular入门之路由/';
+          this.page.identifier = '2018/10/14/Angular入门之路由/';
+          this.page.title = 'Angular入门之路由';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';

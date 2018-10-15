@@ -325,6 +325,235 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/14/Angular入门之路由/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengChe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风车's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/14/Angular入门之路由/" itemprop="url">Angular入门之路由</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-14T10:06:47+08:00">
+                2018-10-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Angular/" itemprop="url" rel="index">
+                    <span itemprop="name">Angular</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/14/Angular入门之路由/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/10/14/Angular入门之路由/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Angular路由的基础知识"><a href="#Angular路由的基础知识" class="headerlink" title="Angular路由的基础知识"></a><code>Angular</code>路由的基础知识</h3><ul>
+<li>路由内容<ul>
+<li>基本用法</li>
+<li>子路由、保护路由和辅助路由</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">简介</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>Routes</code></td>
+<td style="text-align:center"><code>路由配置</code>，保存着哪个URL对应展示哪个组件，以及在哪个<code>RouteOutlet</code>中展示组件</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>RouterOutlet</code></td>
+<td style="text-align:center">在html中标记路由内容呈现位置的<code>占位符指令</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Router</code></td>
+<td style="text-align:center">负责在运行时执行路由的对象，可以通过调用其<code>navigate()</code>和<code>navigateByUrl()</code>方法来导航到一个指定的路由</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>RouterLink</code></td>
+<td style="text-align:center">在html中声明路由导航用的指令</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>ActivatedRoute</code></td>
+<td style="text-align:center">当前激活的路由对象，保存着当前路由的信息，如路由<code>地址</code>，<code>路由参数</code>等</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>路由信息的配置文件（<code>app-routing.module.ts</code>）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; NgModule &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</div><div class="line"><span class="keyword">import</span> &#123; RouterModule, Routes &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</div><div class="line"><span class="keyword">import</span> &#123; HomeComponent &#125; <span class="keyword">from</span> <span class="string">'./home/home.component'</span>;</div><div class="line"><span class="keyword">import</span> &#123; DetailComponent &#125; <span class="keyword">from</span> <span class="string">'./detail/detail.component'</span>;</div><div class="line"><span class="keyword">import</span> &#123; Code404Component &#125; <span class="keyword">from</span> <span class="string">'./code404/code404.component'</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> routes: Routes = [&#123;</div><div class="line">    path: <span class="string">''</span>, <span class="attr">component</span>: HomeComponent,<span class="comment">// path 不要用'/'开头</span></div><div class="line">    path: <span class="string">'detail'</span>, <span class="attr">component</span>: DetailComponent,</div><div class="line">    path: <span class="string">'**'</span>, <span class="attr">component</span>: Code404Component,<span class="comment">// 404页面路由</span></div><div class="line">&#125;];</div><div class="line"></div><div class="line">@NgModule(&#123;</div><div class="line">    imports: [RouterModule.forRoot(routes)],</div><div class="line">    exports: [RouterModule]</div><div class="line">&#125;)</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AppRoutingModule</span> </span>&#123; &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>模板（<code>app-component.html</code>）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/']"</span>&gt;</span>主页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail']"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">value</span>=<span class="string">"详情页"</span> (<span class="attr">click</span>)=<span class="string">"toDetail()"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">router-outlet</span>&gt;</span><span class="tag">&lt;/<span class="name">router-outlet</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>使用 Router 在组件中进行路由导航（<code>app.component.ts</code>）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; Component &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</div><div class="line"><span class="keyword">import</span> &#123; Router &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</div><div class="line"></div><div class="line">@Component(&#123;</div><div class="line">    selector: <span class="string">'app-root'</span>,</div><div class="line">    templateUrl: <span class="string">'./app.component.html'</span>,</div><div class="line">    styleUrls: [<span class="string">'./app.component.css'</span>]</div><div class="line">&#125;)</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AppComponent</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>(private router: Router) &#123; &#125;</div><div class="line"></div><div class="line">    toDetail() &#123;</div><div class="line">        <span class="keyword">this</span>.router.navigate([<span class="string">'/detail'</span>]);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Angular在路由时传递数据"><a href="#Angular在路由时传递数据" class="headerlink" title="Angular在路由时传递数据"></a><code>Angular</code>在路由时传递数据</h3><ul>
+<li><p>在查询参数中传递数据</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 通过 ? 传递 queryParams --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail?id=1&amp;name=2']"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"><span class="comment">&lt;!-- 或者 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail']"</span> [<span class="attr">queryParams</span>]=<span class="string">"&#123;id:1,name:2&#125;"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在路由的目标组件中，通过以下方式获取</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</div><div class="line">    private id: number;</div><div class="line">    <span class="keyword">constructor</span>(private routeInfo: ActivatedRoute) &#123; &#125;</div><div class="line">    ngOnInit() &#123;</div><div class="line">        <span class="comment">// 快捷获取：snapshot方式（参数快照），即组件初始化时，id只赋值一次</span></div><div class="line">        <span class="keyword">this</span>.id = <span class="keyword">this</span>.routeInfo.snapshot.queryParams[<span class="string">'id'</span>];</div><div class="line"></div><div class="line">        <span class="comment">// 或者对参数进行订阅，在同一个组件中（DetailComponent）中切换参数时就得用订阅的方式</span></div><div class="line">        <span class="keyword">this</span>.routeInfo.queryParams.subscribe(<span class="function">(<span class="params">queryParams: QueryParams</span>) =&gt;</span> &#123;</div><div class="line">            <span class="keyword">this</span>.id = queryParams[<span class="string">'id'</span>];</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>在路由路径中传递数据</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail', 1]"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// routes</span></div><div class="line">&#123; <span class="attr">path</span>: <span class="string">'detail/:id'</span> &#125; <span class="comment">// /detail/1</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在路由的目标组件中，通过以下方式获取</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</div><div class="line">    private id: number;</div><div class="line">    <span class="keyword">constructor</span>(private routeInfo: ActivatedRoute) &#123; &#125;</div><div class="line">    ngOnInit() &#123;</div><div class="line">        <span class="comment">// 快捷获取：snapshot方式（参数快照），即组件初始化时，id只赋值一次</span></div><div class="line">        <span class="keyword">this</span>.id = <span class="keyword">this</span>.routeInfo.snapshot.params[<span class="string">'id'</span>];</div><div class="line"></div><div class="line">        <span class="comment">// 或者对参数进行订阅，在同一个组件中（DetailComponent）中切换参数时就得用订阅的方式</span></div><div class="line">        <span class="keyword">this</span>.routeInfo.params.subscribe(<span class="function">(<span class="params">params: Params</span>) =&gt;</span> &#123;</div><div class="line">            <span class="keyword">this</span>.id = params[<span class="string">'id'</span>];</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>在路由配置中传递数据</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// routes</span></div><div class="line">&#123; <span class="attr">path</span>: <span class="string">'detail'</span>, <span class="attr">component</span>: DetailComponent, <span class="attr">data</span>: [&#123; <span class="attr">isProd</span>: <span class="literal">true</span> &#125;] &#125; </div><div class="line"><span class="comment">// data 属性本身是一个数组，在数组中可以定义任意个对象，isProd: 是否是生产环境</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在路由的目标组件中，通过data的下标和属性名方式获取</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</div><div class="line">    private isProd: boolean;</div><div class="line">    <span class="keyword">constructor</span>(private routeInfo: ActivatedRoute) &#123; &#125;</div><div class="line">    ngOnInit() &#123;</div><div class="line">        <span class="keyword">this</span>.isProd = <span class="keyword">this</span>.routeInfo.snapshot.data[<span class="number">0</span>][<span class="string">'isProd'</span>];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Angular重定向路由"><a href="#Angular重定向路由" class="headerlink" title="Angular重定向路由"></a><code>Angular</code>重定向路由</h3><ul>
+<li>在用户访问一个特定的地址时，将其重定向到另一个指定的地址。</li>
+<li>即：我们想通过<code>localhost:4200</code>来重定向到<code>localhost:4200/home</code><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> routes: Routes = [&#123;</div><div class="line">    path: <span class="string">''</span>, <span class="attr">redirectTo</span>: <span class="string">'/home'</span>, <span class="attr">pathMatch</span>: <span class="string">'full'</span>,<span class="comment">// pathMatch: 'full' || 'prefix', 精准匹配 || 前缀匹配</span></div><div class="line">    path: <span class="string">'home'</span>, <span class="attr">component</span>: HomeComponent,</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Angular子路由"><a href="#Angular子路由" class="headerlink" title="Angular子路由"></a><code>Angular</code>子路由</h3><ul>
+<li><code>略</code><ul>
+<li><code>&#39;./&#39;</code></li>
+<li><code>children</code></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/22/Angular入门之简介/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -525,9 +754,6 @@
 <h3 id="Angular"><a href="#Angular" class="headerlink" title="Angular"></a><code>Angular</code></h3><ul>
 <li>继承<code>angularJS</code></li>
 <li>吸收<code>React</code></li>
-</ul>
-<h3 id="Angular的路由"><a href="#Angular的路由" class="headerlink" title="Angular的路由"></a><code>Angular</code>的路由</h3><ul>
-<li>在路上…</li>
 </ul>
 
           
@@ -1483,6 +1709,165 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/则修之理清思路/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengChe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风车's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/28/则修之理清思路/" itemprop="url">则修之理清思路</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T21:31:14+08:00">
+                2018-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/则修/" itemprop="url" rel="index">
+                    <span itemprop="name">则修</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/28/则修之理清思路/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/28/则修之理清思路/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+
+    
+    <div class="post-body post-chat" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          内容已加密，请输入密码进行浏览。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/28/则修之理清思路/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/则修之M3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2088,475 +2473,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/Java入门之集合框架/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengChe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="风车's Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/01/Java入门之集合框架/" itemprop="url">Java入门之集合框架</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T11:08:19+08:00">
-                2018-05-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/05/01/Java入门之集合框架/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/05/01/Java入门之集合框架/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="一、集合框架"><a href="#一、集合框架" class="headerlink" title="一、集合框架"></a>一、集合框架</h3><ol>
-<li>概念<ul>
-<li>现实生活中：很多的事物凑在一起</li>
-<li>数学中的集合：具有共同属性的事物的总体</li>
-<li>Java中的集合类：是一种工具类，就像是容器，存储任意数量的具有共同属性的对象</li>
-</ul>
-</li>
-<li>作用<ul>
-<li>在类的内部，对数据进行组织；</li>
-<li>简单而快速的搜索大数量的条目；</li>
-<li>有的集合接口，提供了一系列排列有序的元素，并且可以在序列中间快速的插入或者删除有关元素；</li>
-<li>有的集合接口，提供了映射关系，可以通过关键字(key)去快速查找到对应的唯一对象，而这个关键字可以是任意类型。</li>
-</ul>
-</li>
-<li>集合与数组的对比 —— 为何选择集合而不是数组<ul>
-<li>数组的长度是固定的，集合的长度是可变的</li>
-<li>数组只能通过下标访问元素，类型固定，而有的集合可以通过任意类型查找所映射的具体对象</li>
-</ul>
-</li>
-<li>体系结构<ul>
-<li>Collection<br><img src="/2018/05/01/Java入门之集合框架/Collection.png" alt="Alt text"></li>
-<li>Map<br><img src="/2018/05/01/Java入门之集合框架/Map.png" alt="Alt text"></li>
-</ul>
-</li>
-</ol>
-<h3 id="二、Collection接口、子接口以及实现类"><a href="#二、Collection接口、子接口以及实现类" class="headerlink" title="二、Collection接口、子接口以及实现类"></a>二、Collection接口、子接口以及实现类</h3><ol>
-<li>Collection接口<ul>
-<li>是List、Set和Queue接口的父接口</li>
-<li>定义了可用于操作List、Set和Queue的方法 —— 增删改查</li>
-</ul>
-</li>
-<li>List接口及其实现类 —— ArrayList<ul>
-<li>List是元素有序并且可以重复的集合，被称为序列</li>
-<li>List可以精确的控制每个元素的插入位置，或删除某个位置元素</li>
-<li>ArrayList —— 数组序列，是List的一个重要实现类</li>
-<li>ArrayList底层是由数组实现的  </li>
-</ul>
-</li>
-</ol>
-<h3 id="三、List实现功能-——-模拟学生选课功能"><a href="#三、List实现功能-——-模拟学生选课功能" class="headerlink" title="三、List实现功能 —— 模拟学生选课功能"></a>三、List实现功能 —— 模拟学生选课功能</h3><ol>
-<li><p>选择课程（往List中添加课程）</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Course</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> String id;</div><div class="line">    <span class="keyword">public</span> String name;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Course</span><span class="params">(String id, String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.id = id;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.Set;</div><div class="line"><span class="keyword">import</span> java.util.HashSet;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> String id;</div><div class="line">    <span class="keyword">public</span> String name;</div><div class="line">    <span class="keyword">public</span> Set courses;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String id, String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.id = id;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">        <span class="keyword">this</span>.courses = <span class="keyword">new</span> HashSet();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListCourses</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 用于存放备选课程的List</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">public</span> List selCourses;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ListCourses</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.selCourses = <span class="keyword">new</span> ArrayList();</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 用于往selCourses中添加备选课程</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addCourse</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 1. 创建一个课程对象，并通过调用add方法，添加到备选课程List中</span></div><div class="line">        Course course1 = <span class="keyword">new</span> Course(<span class="string">"1"</span>, <span class="string">"数据结构"</span>);</div><div class="line">        selCourses.add(course1);</div><div class="line"></div><div class="line">        Course c1 = (Course)selCourses.get(<span class="number">0</span>);</div><div class="line">        System.out.println(<span class="string">"添加了课程:"</span> + c1.id + <span class="string">":"</span> + c1.name);</div><div class="line">        </div><div class="line"></div><div class="line">        <span class="comment">// 2. 另一种添加方式</span></div><div class="line">        Course course2 = <span class="keyword">new</span> Course(<span class="string">"2"</span>, <span class="string">"C语言"</span>);</div><div class="line">        selCourses.add(<span class="number">0</span>, course2);</div><div class="line"></div><div class="line">        Course c2 = (Course)selCourses.get(<span class="number">0</span>);</div><div class="line">        System.out.println(<span class="string">"添加了课程:"</span> + c2.id + <span class="string">":"</span> + c2.name);</div><div class="line"></div><div class="line"></div><div class="line">        <span class="comment">// 3. 以下方法会抛出数组下标越界</span></div><div class="line">        <span class="comment">// Course course3 = new Course("3", "Test");</span></div><div class="line">        <span class="comment">// selCourses.add(4, course3);</span></div><div class="line"></div><div class="line"></div><div class="line">        <span class="comment">// 4. addAll的添加方式</span></div><div class="line">        Course[] courses1 = &#123;<span class="keyword">new</span> Course(<span class="string">"3"</span>, <span class="string">"离散数学"</span>), <span class="keyword">new</span> Course(<span class="string">"4"</span>, <span class="string">"汇编语言"</span>)&#125;;</div><div class="line">        selCourses.addAll(Arrays.asList(courses1));</div><div class="line"></div><div class="line">        Course c3 = (Course)selCourses.get(<span class="number">2</span>);</div><div class="line">        Course c4 = (Course)selCourses.get(<span class="number">3</span>);</div><div class="line">        System.out.println(<span class="string">"添加了课程:"</span> + c3.id + <span class="string">":"</span> + c3.name + <span class="string">";"</span> + c4.id + <span class="string">":"</span> + c4.name);</div><div class="line"></div><div class="line"></div><div class="line">        <span class="comment">// 5. addAll的另一种添加方式</span></div><div class="line">        Course[] courses2 = &#123;<span class="keyword">new</span> Course(<span class="string">"5"</span>, <span class="string">"高等数学"</span>), <span class="keyword">new</span> Course(<span class="string">"6"</span>, <span class="string">"大学英语"</span>)&#125;;</div><div class="line">        selCourses.addAll(<span class="number">2</span>, Arrays.asList(courses2));</div><div class="line"></div><div class="line">        Course c5 = (Course)selCourses.get(<span class="number">2</span>);</div><div class="line">        Course c6 = (Course)selCourses.get(<span class="number">3</span>);</div><div class="line">        System.out.println(<span class="string">"添加了课程:"</span> + c5.id + <span class="string">":"</span> + c5.name + <span class="string">";"</span> + c6.id + <span class="string">":"</span> + c6.name);</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ListCourses listCourses = <span class="keyword">new</span> ListCourse();</div><div class="line">        listCourses.addCourse();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> <img src="/2018/05/01/Java入门之集合框架/selCourses.png" alt="Alt text"></p>
-</li>
-<li><p>查看所选课程（遍历List中的元素）</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.Iterator;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListCourses</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// ...</span></div><div class="line"></div><div class="line">    <span class="comment">// 通过迭代器来遍历List</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">iteratorCourse</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 通过集合的iterator方法，取得迭代器的实例</span></div><div class="line">        Iterator it =  selCourses.iterator();</div><div class="line">        <span class="keyword">while</span> (it.hasNext()) &#123;</div><div class="line">            Course c = (Course)it.next();</div><div class="line">            System.out.println(<span class="string">"课程:"</span> + c.id + <span class="string">":"</span> + c.name);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ListCourses listCourses = <span class="keyword">new</span> ListCourse();</div><div class="line">        listCourses.addCourse();</div><div class="line"></div><div class="line">        listCourses.iteratorCourse();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.Iterator;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListCourses</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// ...</span></div><div class="line"></div><div class="line">    <span class="comment">// 通过for each方法访问集合元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">forEachCourse</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 通过集合的iterator方法，取得迭代器的实例</span></div><div class="line">        <span class="keyword">for</span> (Object obj:selCourses) &#123;</div><div class="line">            Course c = (Course)obj;</div><div class="line">            System.out.println(<span class="string">"课程:"</span> + c.id + <span class="string">":"</span> + c.name);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ListCourses listCourses = <span class="keyword">new</span> ListCourse();</div><div class="line">        listCourses.addCourse();</div><div class="line">        </div><div class="line">        <span class="comment">// ...</span></div><div class="line"></div><div class="line">        listCourses.forEachCourse();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>修改所选课程（修改List中的元素）</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.Iterator;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListCourses</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// ...</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">modifyCourse</span><span class="params">()</span> </span>&#123;</div><div class="line">        selCourses.set(<span class="number">4</span>, <span class="keyword">new</span> Course(<span class="string">"7"</span>, <span class="string">"毛概"</span>));</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ListCourses listCourses = <span class="keyword">new</span> ListCourse();</div><div class="line">        listCourses.addCourse();</div><div class="line">        </div><div class="line">        <span class="comment">// ...</span></div><div class="line"></div><div class="line">        listCourses.modifyCourse();</div><div class="line">        listCourses.forEachCourse();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>删除所选的某门课程（删除List中的元素）</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.Iterator;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListCourses</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// ...</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeCourse</span><span class="params">()</span> </span>&#123;</div><div class="line">        Course c = (Course)selCourses.get(<span class="number">4</span>);</div><div class="line">        selCourses.remove(c);</div><div class="line">        <span class="comment">// or: selCourses.remove(4);</span></div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ListCourses listCourses = <span class="keyword">new</span> ListCourse();</div><div class="line">        listCourses.addCourse();</div><div class="line"></div><div class="line">        <span class="comment">// ...</span></div><div class="line"></div><div class="line">        listCourses.removeCourse();</div><div class="line">        listCourses.forEachCourse();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.Iterator;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListCourses</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// ...</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeAllCourse</span><span class="params">()</span> </span>&#123;</div><div class="line">        Course[] courses = &#123;(Course)selCourses.get(<span class="number">4</span>), (Course)selCourses.get(<span class="number">5</span>)&#125;;</div><div class="line">        selCourses.removeAll(Array.asList(courses));</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ListCourses listCourses = <span class="keyword">new</span> ListCourse();</div><div class="line">        listCourses.addCourse();</div><div class="line"></div><div class="line">        <span class="comment">// ...</span></div><div class="line"></div><div class="line">        listCourses.removeAllCourse();</div><div class="line">        listCourses.forEachCourse();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>判断List中是否包含某个元素</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.Iterator;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListCourses</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// ...</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">containsCourse</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 取得备选课程序列的第0个元素</span></div><div class="line">        Course course = selCourses.get(<span class="number">0</span>);<span class="comment">// selCourses 假设已应用泛型，这里不用强转类型</span></div><div class="line">        <span class="comment">// 打印输出selCourses是否包含course对象</span></div><div class="line">        System.out.println(<span class="string">"备选课程中是否包含课程："</span> + course.name + <span class="string">","</span> + selCourses.contains(course));<span class="comment">// true</span></div><div class="line"></div><div class="line">        <span class="comment">// 创建一个新的课程对象，ID和名称，与course对象完全一样</span></div><div class="line">        Course course2 = <span class="keyword">new</span> Course(course.id, course.name);</div><div class="line">        System.out.println(<span class="string">"备选课程中是否包含课程："</span> + course2.name + <span class="string">","</span> + selCourses.contains(course2));<span class="comment">// false</span></div><div class="line"></div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ListCourses listCourses = <span class="keyword">new</span> ListCourse();</div><div class="line">        listCourses.addCourse();<span class="comment">// 除了addCourse方法，其他都注释掉</span></div><div class="line"></div><div class="line">        listCourses.containsCourse();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>判断List中是否包含某属性相同的元素，如对比元素的name是否相同<br> contains内部的实现原理，其实是遍历集合，然后调用equals方法进行对比的，所以我们可以重写equals方法来实现。</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Course</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> String id;</div><div class="line">    <span class="keyword">public</span> String name;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Course</span><span class="params">(String id, String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.id = id;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Course</span><span class="params">()</span> </span>&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == obj) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (obj == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (!(obj <span class="keyword">instanceof</span> Course)) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        Course course = (Course) obj;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.name == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (course.name == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.name.equals(course.name)) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>使用indexOf方法取得某元素在集合中的索引位置</p>
-</li>
-<li>实现List集合的排序（TODO）</li>
-</ol>
-<h3 id="四、泛型"><a href="#四、泛型" class="headerlink" title="四、泛型"></a>四、泛型</h3><ol>
-<li>上文List集合中，我们一直添加的是课程类，如果期间我们往该集合中添加一些奇怪的东西，比如说字符串，则会抛出ClassCastException异常；原因很简单，我们在遍历集合，将里面的Object类型元素强转成课程类型，突然遇到字符串类型的元素，把它进行强转的话就会很容易的抛出这个异常了。又没有一种方法可以控制我往某个集合中添加元素的类型呢？这就需要用到一个重要的知识：泛型。</li>
-<li>集合中的元素，可以是任意类型的对象（对象的引用）<ul>
-<li>如果把某个对象放入集合，则会忽略他的类型，而把他当做Object处理</li>
-</ul>
-</li>
-<li>泛型则是规定了某个集合只可以存放特定类型的对象<ul>
-<li>会在编译期间进行类型检查</li>
-<li>可以直接按指定类型获取集合元素</li>
-</ul>
-</li>
-<li><p>示例</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// 带有泛型 —— Course的List类型属性</span></div><div class="line">    <span class="keyword">public</span> List&lt;Course&gt; courses;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ListGeneric</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.courses = <span class="keyword">new</span> ArrayList&lt;Course&gt;();</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addCourse</span><span class="params">()</span> </span>&#123;</div><div class="line">        Course course1 = <span class="keyword">new</span> Course(<span class="string">"1"</span>, <span class="string">"大学语文"</span>);</div><div class="line">        courses.add(course1);</div><div class="line"></div><div class="line">        <span class="comment">// 这里则在编译时，抛出错误；泛型集合中，不能添加泛型规定的类型及其子类型以外的对象，否则会把报错！</span></div><div class="line">        courses.add(<span class="string">"能否添加一些奇怪的东西呢？"</span>);</div><div class="line"></div><div class="line"></div><div class="line">        Course course2 = <span class="keyword">new</span> Course(<span class="string">"2"</span>, <span class="string">"Java基础"</span>);</div><div class="line">        courses.add(course2);</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">forEachCourse</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (Course course:courses) &#123;<span class="comment">// 这里就不用强转类型了</span></div><div class="line">            System.out.println(course.id + <span class="string">":"</span> + course.name);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ListGeneric listGeneric = <span class="keyword">new</span> ListGeneric();</div><div class="line">        listGeneric.addCourse();</div><div class="line"></div><div class="line">        listGeneric.forEachCourse();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>泛型集合可以添加泛型的子类型的对象实例<br> 比如：ChileCourse继承Course，那么ChileCourse的实例也是可以添加到泛型为Course的List集合中去。</p>
-</li>
-<li>泛型集合中的限定类型不能使用基本数据类型；可以通过使用包装类限定允许存入的基本数据类型。</li>
-</ol>
-<h3 id="五、Set接口及其实现类-——-HashSet"><a href="#五、Set接口及其实现类-——-HashSet" class="headerlink" title="五、Set接口及其实现类 —— HashSet"></a>五、Set接口及其实现类 —— HashSet</h3><ol>
-<li>Set是元素无序并且不可以重复的集合，被称为集</li>
-<li>HashSet —— 哈希集，是Set的一个重要实现类</li>
-<li>Set案例功能，提供备选课程</li>
-<li>创建学生对象，并给该学生添加三门课程（添加在学生的courses —— Set类型的属性中）<ul>
-<li>显示备选课程</li>
-<li>循环三次，每次输入课程ID</li>
-<li>往学生的courses属性中添加与输入的ID匹配的课程</li>
-<li>输出学生选择的课程</li>
-</ul>
-</li>
-</ol>
-<h3 id="六、Set案例功能"><a href="#六、Set案例功能" class="headerlink" title="六、Set案例功能"></a>六、Set案例功能</h3><ol>
-<li><p>修改上文定义学生类选课的泛型</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.Set;</div><div class="line"><span class="keyword">import</span> java.util.HashSet;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> String id;</div><div class="line">    <span class="keyword">public</span> String name;</div><div class="line">    <span class="keyword">public</span> Set &lt;Course&gt; courses;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String id, String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.id = id;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">        <span class="keyword">this</span>.courses = <span class="keyword">new</span> HashSet&lt;Course&gt;();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.Set;</div><div class="line"><span class="keyword">import</span> java.util.HashSet;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SetCourses</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> List&lt;Course&gt; selCourses;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SetCourses</span><span class="params">()</span> </span>&#123;</div><div class="line">        selCourses = <span class="keyword">new</span> ArrayList&lt;Course&gt;();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// public void addCourse() &#123;&#125; // 同上文 ListCourses 的方法</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        SetCourses setCourses = <span class="keyword">new</span> SetCourses();</div><div class="line">        setCourses.addCourse();</div><div class="line"></div><div class="line">        setCourses.forEachCourse();</div><div class="line"></div><div class="line"></div><div class="line">        Student student = <span class="keyword">new</span> Student(<span class="string">"1"</span>, <span class="string">"小明"</span>);</div><div class="line"></div><div class="line">        Scanner scanner = <span class="keyword">new</span> Scanner(System.in);</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</div><div class="line">            System.out.println(<span class="string">"请输入课程ID"</span>);</div><div class="line">            String courseId = scanner.next();</div><div class="line">            <span class="keyword">for</span> (Course course : setCourses.selCourses) &#123;</div><div class="line">                <span class="keyword">if</span> (course.id.equals(courseId)) &#123;</div><div class="line">                    <span class="comment">// Set中，添加某个元素，无论添加多少次，最终只会保留一个该对象（的引用），并且保留的是第一次添加的那一个</span></div><div class="line">                    student.courses.add(course);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        setCourses.forEachStudentSet(student);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">forEachStudentSet</span><span class="params">(Student student)</span> </span>&#123;</div><div class="line">        <span class="comment">// 打印输出，学生所选的课程！</span></div><div class="line">        <span class="keyword">for</span> (Course course : student.courses) &#123;</div><div class="line">            System.out.println(<span class="string">"选择了课程:"</span> + course.id + <span class="string">":"</span> + course.name);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>判断Set中是否包含某元素</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.Set;</div><div class="line"><span class="keyword">import</span> java.util.HashSet;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SetCourses</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> List&lt;Course&gt; selCourses;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SetCourses</span><span class="params">()</span> </span>&#123;</div><div class="line">        selCourses = <span class="keyword">new</span> ArrayList&lt;Course&gt;();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// public void addCourse() &#123;&#125; // 同上文 ListCourses 的方法</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 这部分内容，同上</span></div><div class="line">        </div><div class="line">        <span class="comment">// ...</span></div><div class="line"></div><div class="line">        <span class="comment">// Set的contains方法</span></div><div class="line">        Course course = <span class="keyword">new</span> Course();</div><div class="line">        course.name = <span class="string">"离散数学"</span>;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"备选课程中是否包含课程："</span> + course.name + <span class="string">","</span> + student.courses.contains(course));<span class="comment">// 这里返回的是：false</span></div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// public void forEachStudentSet // 同上</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 这里返回的是：false；因为这里使用的是HashSet去实现的Set接口，所以这就得看HashSet的contains它的实现机制了。<br> Object不仅定义了equals方法，还有hashCode方法，它返回的是对象哈希码的值<br> 当调用HashSet的contains方法时，它是先调用hashCode方法来返回哈希码，如果哈希码相等的情况下，再调用equals方法，只有这两个方法所返回的值都相等的情况下，才认定这个HashSet包含某个元素</p>
-<p> 重写hashCode和equals方法：</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Course</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> String id;</div><div class="line">    <span class="keyword">public</span> String name;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Course</span><span class="params">(String id, String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.id = id;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Course</span><span class="params">()</span> </span>&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> prime = <span class="number">31</span>;</div><div class="line">        <span class="keyword">int</span> result = <span class="number">1</span>;</div><div class="line">        result = prime * result + ((name == <span class="keyword">null</span>) ? <span class="number">0</span> : name.hashCode());</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == obj) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (obj == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (!(obj <span class="keyword">instanceof</span> Course)) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        Course course = (Course) obj;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.name == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (course.name == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.name.equals(course.name)) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 再运行以上程序，则返回的是：true。</p>
-</li>
-</ol>
-<h3 id="七、Map和HashMap"><a href="#七、Map和HashMap" class="headerlink" title="七、Map和HashMap"></a>七、Map和HashMap</h3><ol>
-<li>Map接口<ul>
-<li>Map提供了一种映射关系，其中的元素是以键值对(key-value)的形式存储的，能够实现根据key快速查找value</li>
-<li>Map中的键值对以Entry类型的对象实例形式存在</li>
-<li>键(key值)不可重复，value值可以</li>
-<li>Map支持泛型，形式如：Map<k, v=""></k,></li>
-</ul>
-</li>
-<li>HashMap类<ul>
-<li>HashMap是Map的一个重要实现类，也是最常用的，基于哈希表实现</li>
-<li>HashMap中的Entry对象是无序排列的</li>
-<li>key值和value值都可以为null，但是一个HashMap只能有一个key值为null的映射(key值不可重复)</li>
-</ul>
-</li>
-<li>Map和HashMap案例说明<ul>
-<li>通过Map<string, student="">进行学生信息管理，其中key为学生ID，value为学生对象</string,></li>
-<li>通过键盘输入学生信息</li>
-<li>对集合中的学生信息进行增、删、改、查操作</li>
-</ul>
-</li>
-<li><p>Map和HashMap案例</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MapStudent</span> </span>&#123;</div><div class="line">    <span class="comment">// 用来承装学生类型对象</span></div><div class="line">    <span class="keyword">public</span> Map&lt;String, Student&gt; students;</div><div class="line">    <span class="comment">// 在构造方法中初始化students属性</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MapStudent</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.students = <span class="keyword">new</span> HashMap&lt;String, Student&gt;();</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 测试添加：输入学生ID，判断是否被占用；若未被占用，则输入姓名，创建新的学生对象，并且添加到st</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pushStudent</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 创建以个Scanner对象，用来获取输入的学生ID和姓名</span></div><div class="line">        Scanner scanner = <span class="keyword">new</span> Scanner(System.in);</div><div class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">        <span class="keyword">while</span> (i &lt; <span class="number">3</span>) &#123;</div><div class="line">            System.out.println(<span class="string">"请输入学生ID："</span>);</div><div class="line">            String id = scanner.next();</div><div class="line">            Student student = students.get(id);</div><div class="line">            <span class="keyword">if</span> (id == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="comment">// 提示输入学生姓名</span></div><div class="line">                System.out.println(<span class="string">"请输入学生姓名："</span>);</div><div class="line">                String name = scanner.next();</div><div class="line">                <span class="comment">// 创建新的学生对象</span></div><div class="line">                Student newStudent = <span class="keyword">new</span> Student(id, name);</div><div class="line">                <span class="comment">// 通过调用students的put方法，添加（id-学生）映射</span></div><div class="line">                students.put(id, newStudent);</div><div class="line">                System.out.println(<span class="string">"成功添加学生："</span> + students.get(id).name);</div><div class="line">                i++;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                System.out.println(<span class="string">"该学生id已被占用！"</span>);</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 测试Map的keySet方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">forEachStudent</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 通过keySet方法，返回Map中的所有“键”的Set集合</span></div><div class="line">        Set&lt;String&gt; keySet = students.keySet();</div><div class="line">        <span class="comment">// 遍历keySet，取得每一个键，再调用get方法取得每个键对应的value</span></div><div class="line">        <span class="keyword">for</span> (String studentId : keySet) &#123;</div><div class="line">            Student student = students.get(studentId);</div><div class="line">            <span class="keyword">if</span> (student != <span class="keyword">null</span>) &#123;</div><div class="line">                System.out.println(<span class="string">"学生："</span> + student.name);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 测试删除Map中的映射</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeStudent</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 提示输入待删除的学生ID</span></div><div class="line">        System.out.println(<span class="string">"请输入要删除的学生ID！"</span>);</div><div class="line">        Scanner scanner = <span class="keyword">new</span> Scanner(System.in);</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            String id = scanner.next();</div><div class="line">            Student student = students.get(id);</div><div class="line">            <span class="keyword">if</span> (student == <span class="keyword">null</span>) &#123;</div><div class="line">                System.out.println(<span class="string">"该ID不存在！"</span>);</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            &#125;</div><div class="line">            students.remove(id);</div><div class="line">            System.out.println(<span class="string">"成功删除学生："</span> + student.name);</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 通过entrySet方法来遍历Map</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">entrySetStudent</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 通过entrySet方法，返回Map中的所有键值对</span></div><div class="line">        Set&lt;Entry&lt;String, Student&gt;&gt; entrySet = students.entrySet();</div><div class="line">        <span class="keyword">for</span> (Entry&lt;String, Student&gt; entry : entrySet) &#123;</div><div class="line">            System.out.println(<span class="string">"取得键："</span> + entry.getKey());</div><div class="line">            System.out.println(<span class="string">"对应的值为："</span> + entry.getValue().name);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 利用put方法修改Map中的已有映射</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">modifyStudent</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 提示输入待修改的学生ID</span></div><div class="line">        System.out.println(<span class="string">"请输入要修改的学生ID！"</span>);</div><div class="line">        Scanner scanner = <span class="keyword">new</span> Scanner(System.in);</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            String id = scanner.next();</div><div class="line">            Student student = students.get(id);</div><div class="line">            <span class="keyword">if</span> (student == <span class="keyword">null</span>) &#123;</div><div class="line">                System.out.println(<span class="string">"该ID不存在！"</span>);</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            &#125;</div><div class="line">            System.out.println(<span class="string">"当前ID所对应的学生为："</span> + student.name);</div><div class="line">            System.out.println(<span class="string">"请输入新的学生姓名："</span>);</div><div class="line">            String name = scanner.next();</div><div class="line">            Student newStudent = <span class="keyword">new</span> Student(id, name);</div><div class="line">            students.put(id, newStudent);</div><div class="line">            System.out.println(<span class="string">"修改成功！"</span>);</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        MapStudent mapStudent = <span class="keyword">new</span> MapStudent();</div><div class="line"></div><div class="line">        pmapStudent.pushStudent();</div><div class="line"></div><div class="line">        mapStudent.forEachStudent();</div><div class="line"></div><div class="line">        mapStudent.removeStudent();</div><div class="line"></div><div class="line">        mapStudent.entrySetStudent();</div><div class="line"></div><div class="line">        mapStudent.modifyStudent();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>判断Map中是否包含某个Key值或者某个Value值</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.fengche.collection;</div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MapStudent</span> </span>&#123;</div><div class="line">    <span class="comment">// 用来承装学生类型对象</span></div><div class="line">    <span class="keyword">public</span> Map&lt;String, Student&gt; students;</div><div class="line">    <span class="comment">// 在构造方法中初始化students属性</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MapStudent</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.students = <span class="keyword">new</span> HashMap&lt;String, Student&gt;();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 略</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">containsKeyOrValue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 在Map中，用containsKey()方法，来判断是否包含某个Key值</span></div><div class="line">        <span class="comment">// 用containsValue()方法，来判断是否包含某个Value值</span></div><div class="line"></div><div class="line">        String id = <span class="string">"3"</span>;</div><div class="line">        System.out.println(<span class="string">"在学生映射表中是否存在："</span> + students.containsKey(id));</div><div class="line"></div><div class="line">        <span class="comment">// containsValue 同理，这里也是需要重写hashCode和equals方法</span></div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        MapStudent mapStudent = <span class="keyword">new</span> MapStudent();</div><div class="line"></div><div class="line">        <span class="comment">// ...</span></div><div class="line"></div><div class="line">        mapStudent.containsKeyOrValue();</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/29/Java入门之异常/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengChe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="风车's Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/29/Java入门之异常/" itemprop="url">Java入门之异常</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-29T22:08:12+08:00">
-                2018-04-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/04/29/Java入门之异常/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/04/29/Java入门之异常/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="一、异常的简介"><a href="#一、异常的简介" class="headerlink" title="一、异常的简介"></a>一、异常的简介</h3><ol>
-<li><p>有异于常态，和正常情况不一样，有错误出现。阻止当前方法或作用域，称之为异常</p>
-</li>
-<li><p>Java异常体系结构简介<br><img src="/2018/04/29/Java入门之异常/throwable.png" alt="Alt text"></p>
-</li>
-<li><p>处理异常<br> <code>try-catch</code>以及<code>try-catch-finally</code><br> 如果try抛出异常，将会终止执行，程序的控制权将被移交给catch块中的异常处理程序。<br> try会抛出很多种类型的异常，则用多重catch语句，但要注意异常类型必须子类在前父类在后。</p>
-</li>
-<li><p>抛出异常<br> throw —— 将产生的异常抛出（动作）<br> throws —— 声明将要抛出何种类型的异常（声明）</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> 方法名(参数列表) <span class="keyword">throws</span> 异常列表 &#123;</div><div class="line">    <span class="comment">// 调用会抛出异常的方法或者：先抛出一个异常 throw new Exception();</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>自定义异常</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DrunkException</span> <span class="keyword">extends</span> <span class="title">Exception</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DrunkException</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DrunkException</span><span class="params">(String message)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(message);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>Java中的异常链</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * test1(): 抛出“喝大了”异常</span></div><div class="line"><span class="comment"> * test2(): 调用test1()，捕获"喝大了"异常，并且包装成运行时异常，继续抛出</span></div><div class="line"><span class="comment"> * main方法中，调用test2()，尝试捕获test2()方法抛出的异常</span></div><div class="line"><span class="comment"> * */</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChainTest</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] srgs)</span> </span>&#123;</div><div class="line">        ChainTest ct = <span class="keyword">new</span> ChainTest();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            ct.test2();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span> <span class="keyword">throws</span> DrunkException </span>&#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> DrunkException(<span class="string">"喝车别开酒！"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            test1();</div><div class="line">        &#125; <span class="keyword">catch</span> (DrunkException e) &#123;</div><div class="line">            RuntimeException newExc = <span class="keyword">new</span> RuntimeException(<span class="string">"司机一滴酒，亲人两行泪~~"</span>);</div><div class="line">            newExc.initCause(e);</div><div class="line">            <span class="keyword">throw</span> newExc;</div><div class="line"></div><div class="line">            <span class="comment">/*</span></div><div class="line"><span class="comment">            或者</span></div><div class="line"><span class="comment">            RuntimeException newExc = new RuntimeException(e);</span></div><div class="line"><span class="comment">            throw newExc;</span></div><div class="line"><span class="comment">            */</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>实际应用中的经验与总结<br> a. 处理运行时异常时，采用逻辑去合理规避同时辅助try-catch处理<br> b. 在多重catch块后面，可以加一个catch(Exception)来处理可能会被遗漏的异常<br> c. 对于不确定的代码，也可以加上try-catch，处理潜在的异常<br> d. 尽量去处理异常，切忌只是简单的调用printStackTrace()去打印输出<br> e. 具体如何处理异常，要根据不同的业务需求和异常类型去决定<br> f. 尽量添加finally语句块去释放占用的资源</p>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2602,7 +2523,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
