@@ -96,7 +96,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="JavaScript,Angular," />
 
 
 
@@ -112,16 +112,18 @@
 
 
 
-<meta name="description" content="front-end">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风车&#39;s Notes">
-<meta property="og:url" content="http://yoursite.com/tags/Java/index.html">
+<meta name="description" content="Angular依赖注入 依赖注入内容  什么是依赖注入模式及使用依赖注入的好处 介绍Angular的依赖注入实现：注入器和提供器 注入器的层级关系   依赖注入  依赖注入：Dependency Injection，简称DI 一个对象a:A需要依赖另外一个类型为B的对象b，那么对象a不需要明确地实例化对象b，b会由外部机制注入进来，对象a只要声明我需要B类型的对象，有人能给我一个么，这就是依赖注入">
+<meta name="keywords" content="JavaScript,Angular">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular入门之依赖注入">
+<meta property="og:url" content="http://yoursite.com/2018/10/20/Angular入门之依赖注入/index.html">
 <meta property="og:site_name" content="风车&#39;s Notes">
-<meta property="og:description" content="front-end">
+<meta property="og:description" content="Angular依赖注入 依赖注入内容  什么是依赖注入模式及使用依赖注入的好处 介绍Angular的依赖注入实现：注入器和提供器 注入器的层级关系   依赖注入  依赖注入：Dependency Injection，简称DI 一个对象a:A需要依赖另外一个类型为B的对象b，那么对象a不需要明确地实例化对象b，b会由外部机制注入进来，对象a只要声明我需要B类型的对象，有人能给我一个么，这就是依赖注入">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-21T04:14:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风车&#39;s Notes">
-<meta name="twitter:description" content="front-end">
+<meta name="twitter:title" content="Angular入门之依赖注入">
+<meta name="twitter:description" content="Angular依赖注入 依赖注入内容  什么是依赖注入模式及使用依赖注入的好处 介绍Angular的依赖注入实现：注入器和提供器 注入器的层级关系   依赖注入  依赖注入：Dependency Injection，简称DI 一个对象a:A需要依赖另外一个类型为B的对象b，那么对象a不需要明确地实例化对象b，b会由外部机制注入进来，对象a只要声明我需要B类型的对象，有人能给我一个么，这就是依赖注入">
 
 
 
@@ -150,13 +152,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/Java/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/20/Angular入门之依赖注入/"/>
 
 
 
 
 
-  <title>标签: Java | 风车's Notes</title>
+  <title>Angular入门之依赖注入 | 风车's Notes</title>
   
 
 
@@ -181,7 +183,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -309,222 +311,234 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Java<small>标签</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/20/Angular入门之依赖注入/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengChe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风车's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/05/01/Java入门之集合框架/" itemprop="url">
-              
-                <span itemprop="name">Java入门之集合框架</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Angular入门之依赖注入</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-01T11:08:19+08:00"
-              content="2018-05-01" >
-          05-01
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-20T11:34:22+08:00">
+                2018-10-20
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Angular/" itemprop="url" rel="index">
+                    <span itemprop="name">Angular</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/20/Angular入门之依赖注入/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/10/20/Angular入门之依赖注入/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i> 阅读次数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/04/29/Java入门之异常/" itemprop="url">
-              
-                <span itemprop="name">Java入门之异常</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-29T22:08:12+08:00"
-              content="2018-04-29" >
-          04-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/04/29/Java入门之接口/" itemprop="url">
-              
-                <span itemprop="name">Java入门之接口</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-29T15:08:50+08:00"
-              content="2018-04-29" >
-          04-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/04/29/Java入门之多态/" itemprop="url">
-              
-                <span itemprop="name">Java入门之多态</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-29T14:26:50+08:00"
-              content="2018-04-29" >
-          04-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/04/28/Java入门之继承/" itemprop="url">
-              
-                <span itemprop="name">Java入门之继承</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-28T22:56:31+08:00"
-              content="2018-04-28" >
-          04-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/04/28/Java入门之封装/" itemprop="url">
-              
-                <span itemprop="name">Java入门之封装</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-28T20:23:28+08:00"
-              content="2018-04-28" >
-          04-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/04/26/Java入门之类与对象/" itemprop="url">
-              
-                <span itemprop="name">Java入门之类与对象</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-26T20:34:15+08:00"
-              content="2018-04-26" >
-          04-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <h3 id="Angular依赖注入"><a href="#Angular依赖注入" class="headerlink" title="Angular依赖注入"></a><code>Angular</code>依赖注入</h3><ul>
+<li><p><code>依赖注入</code>内容</p>
+<ul>
+<li>什么是<code>依赖注入模式</code>及使用<code>依赖注入</code>的好处</li>
+<li>介绍<code>Angular</code>的<code>依赖注入实现</code>：注入器和提供器</li>
+<li>注入器的层级关系</li>
+</ul>
+</li>
+<li><p><code>依赖注入</code></p>
+<ul>
+<li><code>依赖注入</code>：<code>Dependency Injection</code>，简称<code>DI</code><ul>
+<li>一个对象<code>a:A</code>需要依赖另外一个类型为<code>B</code>的对象<code>b</code>，那么对象<code>a</code>不需要明确地实例化对象<code>b</code>，<code>b</code>会由外部机制注入进来，对象<code>a</code>只要声明我需要<code>B</code>类型的对象，有人能给我一个么，这就是<code>依赖注入</code>需要解决的问题</li>
+<li>与<code>依赖注入</code>经常同时出现的另一个概念叫做<code>控制反转</code></li>
+</ul>
+</li>
+<li><p><code>控制反转</code>：<code>Inversion of Control</code>，简称<code>IOC</code></p>
+<ul>
+<li><code>控制反转</code>是指将依赖的控制权从代码的内部转到代码的外部</li>
+</ul>
+</li>
+<li><p>假如我们这样编写代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> product = <span class="keyword">new</span> Product();<span class="comment">// 这句话，决定我们的代码需要依赖Product类</span></div><div class="line">createShipment(product);</div><div class="line"></div><div class="line"><span class="comment">// 如果有一天我们需要依赖的不是Product了，而是AnotherProduct；那么我们需要修改代码的内部，变成如下：</span></div><div class="line"><span class="keyword">var</span> product = <span class="keyword">new</span> AnotherProduct();</div><div class="line">createShipment(product);</div></pre></td></tr></table></figure>
+</li>
+<li><p>而如果实现了<code>控制反转</code>，则内部代码只需要声明我需要<code>product</code>，至于传进来的是<code>Product</code>，还是<code>AnotherProduct</code>，是由代码的外部决定的，这时代码的控制权由代码的内部转到了外部</p>
+</li>
+<li><code>依赖注入</code>和<code>控制反转</code>表达的是一个思想，<code>控制反转</code>侧重于描述目的，目的是将依赖的控制权从代码的内容转到代码的外部；而<code>依赖注入</code>侧重于描述手段，就是如何来实现<code>控制反转</code>，使用的手段叫<code>依赖注入</code></li>
+<li>实现了<code>控制反转</code>的框架被称为<code>IOC容器</code>，<code>Angular</code>框架就是一个<code>IOC容器</code>，<code>Angular</code>实现<code>控制反转</code>的手段就是<code>依赖注入</code></li>
+</ul>
+</li>
+<li><p><code>依赖注入</code>的好处</p>
+<ul>
+<li>松耦合（消除组件跟服务的<code>紧耦合关系</code>，通过<code>依赖注入</code>可以让组件依赖不同的服务，并且任意更换，这使得组件可以<code>高度复用</code>）</li>
+<li>提高可测试性（假如项目的开发是<code>前后端分离</code>，前端不需要依赖后端服务的开发，可以先直接<code>Mock</code>一个服务来调试，等后端服务真正做好后，再进行联调，使服务可以随意切换）</li>
+</ul>
+</li>
+<li><p>注入器和提供器</p>
+<ul>
+<li><p>注入器</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">constructor</span>(private productService: ProductService) &#123; &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>提供器</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 简写</span></div><div class="line">providers: [ProductService]</div><div class="line"><span class="comment">// 或者</span></div><div class="line">providers: [&#123; <span class="attr">provide</span>: ProductService, <span class="attr">useClass</span>: ProductService &#125;]</div><div class="line"><span class="comment">// 或者 通过工厂方法</span></div><div class="line">providers: [&#123; <span class="attr">provide</span>: ProductService, <span class="attr">useFactory</span>: <span class="function"><span class="params">()</span> =&gt;</span> &#123; &#125; &#125;]</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/tags/Angular/" rel="tag"># Angular</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/14/Angular入门之路由/" rel="next" title="Angular入门之路由">
+                <i class="fa fa-chevron-left"></i> Angular入门之路由
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -532,6 +546,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -552,8 +577,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -639,6 +673,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Angular依赖注入"><span class="nav-number">1.</span> <span class="nav-text">Angular依赖注入</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -789,10 +839,10 @@
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 
@@ -810,6 +860,18 @@
       <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2018/10/20/Angular入门之依赖注入/';
+          this.page.identifier = '2018/10/20/Angular入门之依赖注入/';
+          this.page.title = 'Angular入门之依赖注入';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   
