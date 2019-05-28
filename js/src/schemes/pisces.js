@@ -28,6 +28,11 @@ $(document).ready(function () {
       });
 
       var markdownText = $('.mindmap').text().trim();
+
+      if (!markdownText) {
+        return;
+      }
+      
       $('.mindmap p').each(function(index, element) {
         element.style.display = 'none';
       });
