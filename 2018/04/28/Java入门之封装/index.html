@@ -313,126 +313,24 @@
 
   <div id="posts" class="posts-expand">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/28/Java入门之封装/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengChe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="风车's Notes">
-    </span>
-
     
+    
+    <div class="post-block page">
       <header class="post-header">
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">Java入门之封装</h1>
-        
+	<h1 class="post-title" itemprop="name headline">Java入门之封装</h1>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-28T20:23:28+08:00">
-                2018-04-28
-              </time>
-            
 
-            
 
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/04/28/Java入门之封装/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/04/28/Java入门之封装/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="page-pv"><i class="fa fa-eye"></i> 阅读次数
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
-            </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-
-    
-    <div class="post-body" itemprop="articleBody">
+</header>
 
       
       
-
       
-        <h3 id="一、封装"><a href="#一、封装" class="headerlink" title="一、封装"></a>一、封装</h3><ol>
+      <div class="post-body">
+        
+        
+          <h3 id="一、封装"><a href="#一、封装" class="headerlink" title="一、封装"></a>一、封装</h3><ol>
 <li>概念：<br> 将类的某些信息隐藏在类的内部，不允许外部程序直接访问，而是通过该类提供的方法来实现对隐藏信息的操作和访问。</li>
 <li>好处：<br> a.只能通过规定的方法访问数据<br> b.隐藏类的实例细节，方便修改和实现</li>
 <li>封装的实现步骤<br> a.修改属性的可见性，设为private<br> b.创建getter/setter方法，用于属性的读写<br> c.在getter/setter方法中加入属性控制语句，对属性值的合法性进行判断</li>
@@ -539,67 +437,15 @@ eg：com.fengche.music.*
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 外部类MOuter</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MOuter</span> </span>&#123;   </div><div class="line">    <span class="comment">// 外部类中的方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> a = <span class="number">1</span>;<span class="comment">// 常量</span></div><div class="line">        <span class="keyword">int</span> b = <span class="number">2</span>;</div><div class="line"></div><div class="line">        <span class="comment">// 方法内部类MInner</span></div><div class="line">        <span class="class"><span class="keyword">class</span> <span class="title">MInner</span> </span>&#123;</div><div class="line">            <span class="keyword">int</span> c = <span class="number">3</span>;<span class="comment">// 内部类的变量</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;<span class="comment">// 访问外部类中的成员属性b</span></div><div class="line">                System.out.println(<span class="string">"访问外部类的方法中的常量中a:"</span> + a);</div><div class="line">                System.out.println(<span class="string">"访问内部类中的变量c:"</span> + c);</div><div class="line">            &#125;</div><div class="line">    	&#125;</div><div class="line"></div><div class="line">        MInner mi = <span class="keyword">new</span> MInner();<span class="comment">// 创建方法内部类的对象</span></div><div class="line">        mi.print();<span class="comment">// 调用内部类的方法</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">// 测试方法内部类</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        MOuter mo = <span class="keyword">new</span> MOuter();<span class="comment">// 创建外部类对象</span></div><div class="line">        mo.show();<span class="comment">// 调用外部类对象的show方法</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>注意：由于方法内部类不能在外部类的方法以外的地方使用，因此方法内部类不能使用访问控制符和static修饰符。</p>
 
+        
+      </div>
+      
+      
       
     </div>
     
     
     
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Java/" rel="tag"># Java</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/04/26/Java入门之类与对象/" rel="next" title="Java入门之类与对象">
-                <i class="fa fa-chevron-left"></i> Java入门之类与对象
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/28/Java入门之继承/" rel="prev" title="Java入门之继承">
-                Java入门之继承 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
   </div>
 
 
@@ -768,7 +614,7 @@ eg：com.fengche.music.*
         <div class="copyright" >
   
   &copy;  2017 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -839,6 +685,12 @@ eg：com.fengche.music.*
 
 
 
+
+
+
+
+
+
   
 
 
@@ -872,6 +724,12 @@ eg：com.fengche.music.*
   <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 
   
+  <script type="text/javascript" src="/lib/kity/kity.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/kityminder-core/kityminder.core.min.js"></script>
+
+  
   <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
   
@@ -901,10 +759,10 @@ eg：com.fengche.music.*
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-
+  
 
   
 

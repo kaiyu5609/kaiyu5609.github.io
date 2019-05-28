@@ -14,4 +14,30 @@ $(document).ready(function () {
       setSidebarMarginTop(getSidebarTop());
     }
   });
+
+  // 百度思维导图 20190528
+  setTimeout(function() {
+      var minder = new kityminder.Minder({
+          renderTo: '.mindmap',
+      });
+
+      var markdownText = $('.mindmap').text().trim();
+      $('.mindmap p').each(function(index, element) {
+        element.style.display = 'none';
+      });
+
+      minder.decodeData('markdown', markdownText).then(function(json) {
+        json.template = 'right';
+        minder.importJson(json);
+      });
+      
+      // minder.disable();
+      // minder.execCommand('hand');
+      // minder.execCommand('template', 'right');
+      // console.log(kityminder.Minder.getTemplateList())
+      // console.log(minder.queryCommandValue('template'))
+      // console.log(minder)
+  }, 500);
+
+
 });
