@@ -15,8 +15,14 @@ $(document).ready(function () {
     }
   });
 
+
+  // 通知 20190528 在node_modules/hexo-blog-encrypt/lib/blog-encrypt中添加
+  // var evt = document.createEvent('HTMLEvents');
+  // evt.initEvent('pass', true, true);
+  // document.dispatchEvent(evt);
+
   // 百度思维导图 20190528
-  setTimeout(function() {
+  function renderMinder() {
       var minder = new kityminder.Minder({
           renderTo: '.mindmap',
       });
@@ -37,7 +43,20 @@ $(document).ready(function () {
       // console.log(kityminder.Minder.getTemplateList())
       // console.log(minder.queryCommandValue('template'))
       // console.log(minder)
-  }, 500);
+  }
+
+
+  document.addEventListener('pass', function(event) {
+    setTimeout(function() {
+      renderMinder();
+    },100);
+  }, false);
+
+  setTimeout(function() {
+    if ($('.mindmap').size()) {
+      renderMinder();
+    }
+  },100);
 
 
 });
