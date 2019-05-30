@@ -108,6 +108,7 @@ function touch(container) {
   var startPoint = [];
   var fnPinchIn = function() {};
   var fnPinchOut = function() {};
+  var timer = null;
 
   container.on('touchstart', function(event) {
     try {
@@ -144,8 +145,13 @@ function touch(container) {
             x: touches[1].pageX,
             y: touches[1].pageY
           };
-  
-          var timer = setTimeout(function() {
+          
+          if (timer) {
+            clearTimeout(timer);
+            timer = null;
+          }
+
+          timer = setTimeout(function() {
             var startDis = getDis(startPoint[0], startPoint[1]);
             var nowDis = getDis(nowPoint[0], nowPoint[1]);
 
@@ -155,7 +161,7 @@ function touch(container) {
               fnPinchIn(nowDis / startDis, startPoint, nowPoint);
             }
             startPoint = nowPoint;
-          }, 600);
+          }, 1500);
         }
   
       }
