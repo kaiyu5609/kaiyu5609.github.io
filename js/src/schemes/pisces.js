@@ -112,7 +112,7 @@ function touch(container) {
   container.on('touchstart', function(event) {
     try {
       if (event.target) {
-        var touches = event.touches;
+        var touches = event.originalEvent.touches;
         isTouchMove = false;
   
         if (touches.length >= 2) {
@@ -131,7 +131,7 @@ function touch(container) {
   }).on('touchmove', function(event) {
     try {
       if(event.target) {
-        var touches = event.touches;
+        var touches = event.originalEvent.touches;
         isTouchMove = true;
   
         if (isPinch && touches.length >= 2) {
@@ -164,7 +164,7 @@ function touch(container) {
   .on('touchend', function(event) {
     try {
       if (event.target) {
-        var touches = event.touches;
+        var touches = event.originalEvent.touches;
         var targetTouches = event.targetTouches;
   
         if (isPinch) {
