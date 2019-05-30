@@ -41,6 +41,8 @@ $(document).ready(function () {
         json.template = 'right';
         minder.importJson(json);
       });
+
+      minder.execCommand('hand');
       
       // minder.disable();
       // minder.execCommand('hand');
@@ -48,6 +50,18 @@ $(document).ready(function () {
       // console.log(kityminder.Minder.getTemplateList())
       // console.log(minder.queryCommandValue('template'))
       // console.log(minder)
+
+      var mindmap = document.querySelector('.mindmap');
+      var hammertime = new Hammer(mindmap);
+
+      hammertime.on('pinchin', function(ev) {
+        minder.execCommand('zoomOut');
+      })
+      .on('pinchout', function(ev) {
+        minder.execCommand('zoomIn');
+      });
+
+
   }
 
 
