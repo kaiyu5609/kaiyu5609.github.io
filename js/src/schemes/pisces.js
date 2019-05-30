@@ -54,11 +54,21 @@ $(document).ready(function () {
       var mindmap = document.querySelector('.mindmap');
       var hammertime = new Hammer(mindmap);
 
-      hammertime.on('pinchin', function(ev) {
-        minder.execCommand('zoomOut');
-      })
-      .on('pinchout', function(ev) {
-        minder.execCommand('zoomIn');
+      hammertime.on('tap', function(ev) {
+        var $mindmap = $('.mindmap');
+        var mindmapWidth = $mindmap.width();
+        var mindmapHeight = $mindmap.height();
+        var srcEvent = ev.srcEvent;
+
+        if (srcEvent.offsetY > 50) {
+          return;
+        }
+
+        if (srcEvent.offsetX < mindmapWidth / 2) {
+          minder.execCommand('zoomOut');
+        } else {
+          minder.execCommand('zoomIn');
+        }
       });
 
 
