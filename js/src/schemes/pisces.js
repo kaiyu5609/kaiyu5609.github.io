@@ -150,7 +150,7 @@ function touch(container) {
         
           var now = Date.now();
 
-          if (timer - now > 1500) {
+          if (timer - now > 500) {
             var startDis = getDis(startPoint[0], startPoint[1]);
             var nowDis = getDis(nowPoint[0], nowPoint[1]);
 
