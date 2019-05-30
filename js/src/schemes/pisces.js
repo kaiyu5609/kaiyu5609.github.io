@@ -68,6 +68,14 @@ $(document).ready(function () {
         }
       });
 
+      var toucher = touch($('.mindmap'));
+      toucher.onPinchIn(function() {
+        minder.execCommand('zoomOut');
+      });
+      toucher.onPinchOut(function() {
+        minder.execCommand('zoomIn');
+      });
+
 
   }
 
@@ -86,3 +94,98 @@ $(document).ready(function () {
 
 
 });
+
+// 获取距离
+function getDis(point1, point2) {
+	var x = point2.x - point1.x;
+	var y = point2.y - point1.y;
+	return Math.sqrt(x * x + y * y);
+}
+
+function touch(container) {
+  var isPinch = false;
+  var isTouchMove = false;
+  var startPoint = [];
+  var fnPinchIn = function() {};
+  var fnPinchOut = function() {};
+
+  container.on('touchstart', function(event) {
+    try {
+      if (event.target) {
+        var touches = event.touches;
+        isTouchMove = false;
+  
+        if (touches.length >= 2) {
+          isPinch = true;
+          startPoint[0] = {
+            x: touches[0].pageX,
+            y: touches[0].pageY
+          };
+          startPoint[1] = {
+            x: touches[1].pageX,
+            y: touches[1].pageY
+          };
+        }
+      }
+    } catch(e) { }
+  }).on('touchmove', function(event) {
+    try {
+      if(event.target) {
+        var touches = event.touches;
+        isTouchMove = true;
+  
+        if (isPinch && touches.length >= 2) {
+          var nowPoint = [];
+          nowPoint[0] = {
+            x: touches[0].pageX,
+            y: touches[0].pageY
+          };
+          nowPoint[1] = {
+            x: touches[1].pageX,
+            y: touches[1].pageY
+          };
+          var startDis = getDis(startPoint[0], startPoint[1]);
+          var nowDis = getDis(nowPoint[0], nowPoint[1]);
+  
+          if (nowDis > startDis) {
+            fnPinchOut(nowDis / startDis, startPoint, nowPoint);
+          } else {
+            fnPinchIn(nowDis / startDis, startPoint, nowPoint);
+          }
+  
+          var timer = setTimeout(function() {
+            startPoint = nowPoint;
+          }, 150);
+        }
+  
+      }
+    } catch(e) { }
+  })
+  .on('touchend', function(event) {
+    try {
+      if (event.target) {
+        var touches = event.touches;
+        var targetTouches = event.targetTouches;
+  
+        if (isPinch) {
+          if (
+            touches.length < 2 ||
+            targetTouches.length < 1
+          ) {
+            isPinch = false;
+          }
+        }
+      }
+    } catch(e) { }
+  });
+
+
+  return {
+    onPinchIn: function(callback) {
+      fnPinchIn = callback;
+    },
+    onPinchOut: function(callback) {
+      fnPinchOut = callback;
+    }
+  };
+}
