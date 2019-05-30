@@ -115,7 +115,6 @@ function touch(container) {
       if (event.target) {
         var touches = event.originalEvent.touches;
         isTouchMove = false;
-        timer = Date.now();
         
         if (touches.length >= 2) {
           isPinch = true;
@@ -135,14 +134,7 @@ function touch(container) {
     try {
       if(event.target) {
         var touches = event.originalEvent.touches;
-        var now = Date.now();
-
         isTouchMove = true;
-
-        if (timer - now < 700) {
-          return;
-        }
-        timer = now;
   
         if (isPinch && touches.length >= 2) {
           var nowPoint = [];
@@ -156,15 +148,19 @@ function touch(container) {
             y: touches[1].pageY
           };
           
-          var startDis = getDis(startPoint[0], startPoint[1]);
-          var nowDis = getDis(nowPoint[0], nowPoint[1]);
+          var startDis, nowDis;
 
-          if (nowDis > startDis) {
-            fnPinchOut(nowDis / startDis, startPoint, nowPoint);
-          } else {
-            fnPinchIn(nowDis / startDis, startPoint, nowPoint);
-          }
-          startPoint = nowPoint;
+          setTimeout(function() {
+            startDis = getDis(startPoint[0], startPoint[1]);
+            nowDis = getDis(nowPoint[0], nowPoint[1]);
+            if (nowDis > startDis) {
+              fnPinchOut(nowDis / startDis, startPoint, nowPoint);
+            } else {
+              fnPinchIn(nowDis / startDis, startPoint, nowPoint);
+            }
+            startPoint = nowPoint;
+          }, 600);
+          
         }
       }
     } catch(e) { }
