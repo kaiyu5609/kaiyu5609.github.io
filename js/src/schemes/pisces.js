@@ -149,11 +149,10 @@ function touch(container) {
           };
         
           var now = Date.now();
+          var startDis = getDis(startPoint[0], startPoint[1]);
+          var nowDis = getDis(nowPoint[0], nowPoint[1]);
 
           if (timer - now > 500) {
-            var startDis = getDis(startPoint[0], startPoint[1]);
-            var nowDis = getDis(nowPoint[0], nowPoint[1]);
-
             if (nowDis > startDis) {
               fnPinchOut(nowDis / startDis, startPoint, nowPoint);
             } else {
