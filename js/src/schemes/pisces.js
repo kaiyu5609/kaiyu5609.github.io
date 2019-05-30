@@ -126,6 +126,8 @@ function touch(container) {
             x: touches[1].pageX,
             y: touches[1].pageY
           };
+
+          timer = Date.now();
         }
       }
     } catch(e) { }
@@ -145,13 +147,10 @@ function touch(container) {
             x: touches[1].pageX,
             y: touches[1].pageY
           };
-          
-          if (timer) {
-            clearTimeout(timer);
-            timer = null;
-          }
+        
+          var now = Date.now();
 
-          timer = setTimeout(function() {
+          if (timer - now > 1500) {
             var startDis = getDis(startPoint[0], startPoint[1]);
             var nowDis = getDis(nowPoint[0], nowPoint[1]);
 
@@ -161,9 +160,9 @@ function touch(container) {
               fnPinchIn(nowDis / startDis, startPoint, nowPoint);
             }
             startPoint = nowPoint;
-          }, 1500);
+            timer = now;
+          }
         }
-  
       }
     } catch(e) { }
   })
