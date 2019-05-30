@@ -155,7 +155,7 @@ function touch(container) {
   
           var timer = setTimeout(function() {
             startPoint = nowPoint;
-          }, 150);
+          }, 600);
         }
   
       }
