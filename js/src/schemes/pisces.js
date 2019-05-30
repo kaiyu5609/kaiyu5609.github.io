@@ -51,20 +51,17 @@ $(document).ready(function () {
       // console.log(minder.queryCommandValue('template'))
       // console.log(minder)
 
-      var mindmap = document.querySelector('.mindmap');
-      var hammertime = new Hammer(mindmap);
-
-      hammertime.on('tap', function(ev) {
+      $('.mindmap').on('click', function(ev) {
         var $mindmap = $('.mindmap');
         var mindmapWidth = $mindmap.width();
         var mindmapHeight = $mindmap.height();
-        var srcEvent = ev.srcEvent;
+        var originalEvent = ev.originalEvent;
 
-        if (srcEvent.offsetY > 50) {
+        if (originalEvent.offsetY > 50) {
           return;
         }
 
-        if (srcEvent.offsetX < mindmapWidth / 2) {
+        if (originalEvent.offsetX < mindmapWidth / 2) {
           minder.execCommand('zoomOut');
         } else {
           minder.execCommand('zoomIn');
