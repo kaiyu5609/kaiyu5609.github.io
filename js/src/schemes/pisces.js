@@ -70,10 +70,14 @@ $(document).ready(function () {
 
       var toucher = touch($('.mindmap'));
       toucher.onPinchIn(function() {
-        minder.execCommand('zoomOut');
+        setTimeout(function() {
+          minder.execCommand('zoomOut');
+        }, 500);
       });
       toucher.onPinchOut(function() {
-        minder.execCommand('zoomIn');
+        setTimeout(function() {
+          minder.execCommand('zoomIn');
+        }, 500);
       });
 
 
@@ -148,16 +152,15 @@ function touch(container) {
             y: touches[1].pageY
           };
           
-          var startDis, nowDis;
+          var startDis = getDis(startPoint[0], startPoint[1]);
+          var nowDis = getDis(nowPoint[0], nowPoint[1]);
+          if (nowDis > startDis) {
+            fnPinchOut(nowDis / startDis, startPoint, nowPoint);
+          } else {
+            fnPinchIn(nowDis / startDis, startPoint, nowPoint);
+          }
 
           setTimeout(function() {
-            startDis = getDis(startPoint[0], startPoint[1]);
-            nowDis = getDis(nowPoint[0], nowPoint[1]);
-            if (nowDis > startDis) {
-              fnPinchOut(nowDis / startDis, startPoint, nowPoint);
-            } else {
-              fnPinchIn(nowDis / startDis, startPoint, nowPoint);
-            }
             startPoint = nowPoint;
           }, 600);
           
