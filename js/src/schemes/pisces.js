@@ -144,16 +144,16 @@ function touch(container) {
             x: touches[1].pageX,
             y: touches[1].pageY
           };
-          var startDis = getDis(startPoint[0], startPoint[1]);
-          var nowDis = getDis(nowPoint[0], nowPoint[1]);
-  
-          if (nowDis > startDis) {
-            fnPinchOut(nowDis / startDis, startPoint, nowPoint);
-          } else {
-            fnPinchIn(nowDis / startDis, startPoint, nowPoint);
-          }
   
           var timer = setTimeout(function() {
+            var startDis = getDis(startPoint[0], startPoint[1]);
+            var nowDis = getDis(nowPoint[0], nowPoint[1]);
+
+            if (nowDis > startDis) {
+              fnPinchOut(nowDis / startDis, startPoint, nowPoint);
+            } else {
+              fnPinchIn(nowDis / startDis, startPoint, nowPoint);
+            }
             startPoint = nowPoint;
           }, 600);
         }
