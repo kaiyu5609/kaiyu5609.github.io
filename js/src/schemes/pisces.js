@@ -68,12 +68,6 @@ $(document).ready(function () {
         }
       });
 
-      var hammertime = new Hammer(document.querySelector('.mindmap'));
-
-      hammertime.on('pinch', function(ev) {
-        minder.execCommand('zoomOut');
-      });
-
   }
 
 
