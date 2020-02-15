@@ -325,6 +325,181 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/29/Java入门之异常/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengChe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风车's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/29/Java入门之异常/" itemprop="url">Java入门之异常</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-29T22:08:12+08:00">
+                2018-04-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/04/29/Java入门之异常/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/04/29/Java入门之异常/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、异常的简介"><a href="#一、异常的简介" class="headerlink" title="一、异常的简介"></a>一、异常的简介</h3><ol>
+<li><p>有异于常态，和正常情况不一样，有错误出现。阻止当前方法或作用域，称之为异常</p>
+</li>
+<li><p>Java异常体系结构简介<br><img src="/2018/04/29/Java入门之异常/throwable.png" alt="Alt text"></p>
+</li>
+<li><p>处理异常<br> <code>try-catch</code>以及<code>try-catch-finally</code><br> 如果try抛出异常，将会终止执行，程序的控制权将被移交给catch块中的异常处理程序。<br> try会抛出很多种类型的异常，则用多重catch语句，但要注意异常类型必须子类在前父类在后。</p>
+</li>
+<li><p>抛出异常<br> throw —— 将产生的异常抛出（动作）<br> throws —— 声明将要抛出何种类型的异常（声明）</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> 方法名(参数列表) <span class="keyword">throws</span> 异常列表 &#123;</div><div class="line">    <span class="comment">// 调用会抛出异常的方法或者：先抛出一个异常 throw new Exception();</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>自定义异常</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DrunkException</span> <span class="keyword">extends</span> <span class="title">Exception</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DrunkException</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DrunkException</span><span class="params">(String message)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(message);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Java中的异常链</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * test1(): 抛出“喝大了”异常</span></div><div class="line"><span class="comment"> * test2(): 调用test1()，捕获"喝大了"异常，并且包装成运行时异常，继续抛出</span></div><div class="line"><span class="comment"> * main方法中，调用test2()，尝试捕获test2()方法抛出的异常</span></div><div class="line"><span class="comment"> * */</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChainTest</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] srgs)</span> </span>&#123;</div><div class="line">        ChainTest ct = <span class="keyword">new</span> ChainTest();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            ct.test2();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span> <span class="keyword">throws</span> DrunkException </span>&#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> DrunkException(<span class="string">"喝车别开酒！"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            test1();</div><div class="line">        &#125; <span class="keyword">catch</span> (DrunkException e) &#123;</div><div class="line">            RuntimeException newExc = <span class="keyword">new</span> RuntimeException(<span class="string">"司机一滴酒，亲人两行泪~~"</span>);</div><div class="line">            newExc.initCause(e);</div><div class="line">            <span class="keyword">throw</span> newExc;</div><div class="line"></div><div class="line">            <span class="comment">/*</span></div><div class="line"><span class="comment">            或者</span></div><div class="line"><span class="comment">            RuntimeException newExc = new RuntimeException(e);</span></div><div class="line"><span class="comment">            throw newExc;</span></div><div class="line"><span class="comment">            */</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>实际应用中的经验与总结<br> a. 处理运行时异常时，采用逻辑去合理规避同时辅助try-catch处理<br> b. 在多重catch块后面，可以加一个catch(Exception)来处理可能会被遗漏的异常<br> c. 对于不确定的代码，也可以加上try-catch，处理潜在的异常<br> d. 尽量去处理异常，切忌只是简单的调用printStackTrace()去打印输出<br> e. 具体如何处理异常，要根据不同的业务需求和异常类型去决定<br> f. 尽量添加finally语句块去释放占用的资源</p>
+</li>
+</ol>
+
+          
+        
+      
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/29/Java入门之接口/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2056,7 +2231,7 @@ eg：com.fengche.music.*
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

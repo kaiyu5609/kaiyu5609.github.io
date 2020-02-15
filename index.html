@@ -325,6 +325,204 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/15/axios之合并配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengChe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风车's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/15/axios之合并配置/" itemprop="url">axios之合并配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-15T15:05:31+08:00">
+                2020-02-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/02/15/axios之合并配置/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/02/15/axios之合并配置/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="合并配置的设计与实现"><a href="#合并配置的设计与实现" class="headerlink" title="合并配置的设计与实现"></a>合并配置的设计与实现</h1><h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>在之前的章节我们了解到，在发送请求的时候可以传入一个配置，来决定请求的不同行为。<code>axios</code> 有默认配置，定义一些默认的行为。在发送每个请求，用户传递的配置可以和默认配置做一层合并。</p>
+<p>我们给 <code>axios</code> 对象添加一个 <code>defaults</code> 属性，表示默认配置，你甚至可以直接修改这些默认配置：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">axios.defaults.headers.common[<span class="string">'test'</span>] = <span class="number">123</span></div><div class="line">axios.defaults.headers.post[<span class="string">'Content-Type'</span>] = <span class="string">'application/x-www-form-urlencoded'</span></div><div class="line">axios.defaults.timeout = <span class="number">2000</span></div></pre></td></tr></table></figure>
+<p>其中对于 <code>headers</code> 的默认配置支持 <code>common</code> 和一些请求 <code>method</code> 字段，<code>common</code> 表示对于任何类型的请求都要添加该属性，而 <code>method</code> 表示只有该类型请求方法才会添加对应的属性。</p>
+<p>在上述例子中，我们会默认为所有请求的 <code>header</code> 添加 <code>test</code> 属性，会默认为 <code>post</code> 请求的 <code>header</code> 添加 <code>Content-Type</code> 属性。</p>
+<h2 id="默认配置"><a href="#默认配置" class="headerlink" title="默认配置"></a>默认配置</h2><h3 id="默认配置定义"><a href="#默认配置定义" class="headerlink" title="默认配置定义"></a>默认配置定义</h3><p>接下来，我们先实现默认配置</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> defaults = &#123;</div><div class="line">  method: <span class="string">'get'</span>,</div><div class="line"></div><div class="line">  timeout: <span class="number">0</span>,</div><div class="line"></div><div class="line">  headers: &#123;</div><div class="line">    common: &#123;</div><div class="line">      Accept: <span class="string">'application/json, text/plain, */*'</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> methodsNoData = [<span class="string">'delete'</span>, <span class="string">'get'</span>, <span class="string">'head'</span>, <span class="string">'options'</span>]</div><div class="line"></div><div class="line">methodsNoData.forEach(<span class="function"><span class="params">method</span> =&gt;</span> &#123;</div><div class="line">  defaults.headers[method] = &#123;&#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="keyword">const</span> methodsWithData = [<span class="string">'post'</span>, <span class="string">'put'</span>, <span class="string">'patch'</span>]</div><div class="line"></div><div class="line">methodsWithData.forEach(<span class="function"><span class="params">method</span> =&gt;</span> &#123;</div><div class="line">  defaults.headers[method] = &#123;</div><div class="line">    <span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span></div><div class="line">  &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'defaults:'</span>, <span class="built_in">JSON</span>.stringify(defaults, <span class="literal">null</span>, <span class="number">2</span>))</div><div class="line"></div><div class="line"><span class="comment">// defaults: &#123;</span></div><div class="line"><span class="comment">//   "method": "get",</span></div><div class="line"><span class="comment">//   "timeout": 0,</span></div><div class="line"><span class="comment">//   "headers": &#123;</span></div><div class="line"><span class="comment">//     "common": &#123;</span></div><div class="line"><span class="comment">//       "Accept": "application/json, text/plain, */*"</span></div><div class="line"><span class="comment">//     &#125;,</span></div><div class="line"><span class="comment">//     "delete": &#123;&#125;,</span></div><div class="line"><span class="comment">//     "get": &#123;&#125;,</span></div><div class="line"><span class="comment">//     "head": &#123;&#125;,</span></div><div class="line"><span class="comment">//     "options": &#123;&#125;,</span></div><div class="line"><span class="comment">//     "post": &#123;</span></div><div class="line"><span class="comment">//       "Content-Type": "application/x-www-form-urlencoded"</span></div><div class="line"><span class="comment">//     &#125;,</span></div><div class="line"><span class="comment">//     "put": &#123;</span></div><div class="line"><span class="comment">//       "Content-Type": "application/x-www-form-urlencoded"</span></div><div class="line"><span class="comment">//     &#125;,</span></div><div class="line"><span class="comment">//     "patch": &#123;</span></div><div class="line"><span class="comment">//       "Content-Type": "application/x-www-form-urlencoded"</span></div><div class="line"><span class="comment">//     &#125;</span></div><div class="line"><span class="comment">//   &#125;</span></div><div class="line"><span class="comment">// &#125;</span></div></pre></td></tr></table></figure>
+<p>我们定义了 <code>defaults</code> 常量，它包含默认请求的方法、超时时间，以及 <code>headers</code> 配置。</p>
+<p>未来我们会根据新的需求添加更多的默认配置。</p>
+<h2 id="配置合并及策略"><a href="#配置合并及策略" class="headerlink" title="配置合并及策略"></a>配置合并及策略</h2><p>定义了默认配置后，我们发送每个请求的时候需要把自定义配置和默认配置做合并，它并不是简单的 2 个普通对象的合并，对于不同的字段合并，会有不同的合并策略。举个例子：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">config1 = &#123;</div><div class="line">  method: <span class="string">'get'</span>,</div><div class="line"></div><div class="line">  timeout: <span class="number">0</span>,</div><div class="line"></div><div class="line">  headers: &#123;</div><div class="line">    common: &#123;</div><div class="line">      Accept: <span class="string">'application/json, text/plain, */*'</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">config2 = &#123;</div><div class="line">  url: <span class="string">'/config/post'</span>,</div><div class="line">  method: <span class="string">'post'</span>,</div><div class="line">  data: &#123;</div><div class="line">    a: <span class="number">1</span></div><div class="line">  &#125;,</div><div class="line">  headers: &#123;</div><div class="line">    test: <span class="string">'321'</span></div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">merged = &#123;</div><div class="line">  url: <span class="string">'/config/post'</span>,</div><div class="line">  method: <span class="string">'post'</span>,</div><div class="line">  data: &#123;</div><div class="line">    a: <span class="number">1</span></div><div class="line">  &#125;,</div><div class="line">  timeout: <span class="number">0</span>,</div><div class="line">  headers: &#123;</div><div class="line">    common: &#123;</div><div class="line">      Accept: <span class="string">'application/json, text/plain, */*'</span></div><div class="line">    &#125;</div><div class="line">    test: <span class="string">'321'</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们实现 <code>mergeConfig</code> 合并方法。</p>
+<h3 id="合并方法"><a href="#合并方法" class="headerlink" title="合并方法"></a>合并方法</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">mergeConfig</span>(<span class="params">config1, config2</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!config2) &#123;</div><div class="line">    config2 = &#123;&#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> config = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</div><div class="line"></div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> config2) &#123;</div><div class="line">    mergeField(key)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> config1) &#123;</div><div class="line">    <span class="keyword">if</span> (!config2[key]) &#123;</div><div class="line">      mergeField(key)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">mergeField</span>(<span class="params">key</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> strat = strats[key] || defaultStrat</div><div class="line">    config[key] = strat(config1[key], config2[key])</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> config</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>合并方法的整体思路就是对 <code>config1</code> 和 <code>config2</code> 中的属性遍历，执行 <code>mergeField</code> 方法做合并，这里 <code>config1</code> 代表默认配置，<code>config2</code> 代表自定义配置。</p>
+<p>在 <code>mergeField</code> 方法中，我们会针对不同的属性使用不同的合并策略。</p>
+<h3 id="默认合并策略"><a href="#默认合并策略" class="headerlink" title="默认合并策略"></a>默认合并策略</h3><p>这是大部分属性的合并策略，如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">defaultStrat</span>(<span class="params">val1, val2</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> val2 !== <span class="string">'undefined'</span> ? val2 : val1</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>它很简单，如果有 <code>val2</code> 则返回 <code>val2</code>，否则返回 <code>val1</code>，也就是如果自定义配置中定义了某个属性，就采用自定义的，否则就用默认配置。</p>
+<h3 id="只接受自定义配置合并策略"><a href="#只接受自定义配置合并策略" class="headerlink" title="只接受自定义配置合并策略"></a>只接受自定义配置合并策略</h3><p>对于一些属性如 <code>url</code>、<code>params</code>、<code>data</code>，合并策略如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">fromVal2Strat</span>(<span class="params">val1, val2</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> val2 !== <span class="string">'undefined'</span>) &#123;</div><div class="line">    <span class="keyword">return</span> val2</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> strats = &#123;&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> stratKeysFromVal2 = [<span class="string">'url'</span>, <span class="string">'params'</span>, <span class="string">'data'</span>]</div><div class="line"></div><div class="line">stratKeysFromVal2.forEach(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</div><div class="line">  strats[key] = fromVal2Strat</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>因为对于 <code>url</code>、<code>params</code>、<code>data</code> 这些属性，默认配置显然是没有意义的，它们是和每个请求强相关的，所以我们只从自定义配置中获取。</p>
+<h3 id="复杂对象合并策略"><a href="#复杂对象合并策略" class="headerlink" title="复杂对象合并策略"></a>复杂对象合并策略</h3><p>对于一些属性如 <code>headers</code>，合并策略如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">toString = <span class="built_in">Object</span>.prototype.toString</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">isPlainObject</span>(<span class="params">val</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> toString.call(val) === <span class="string">'[object Object]'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepMergeStrat</span>(<span class="params">val1, val2</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (isPlainObject(val2)) &#123;</div><div class="line">    <span class="keyword">return</span> deepMerge(val1, val2)</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> val2 !== <span class="string">'undefined'</span>) &#123;</div><div class="line">    <span class="keyword">return</span> val2</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isPlainObject(val1)) &#123;</div><div class="line">    <span class="keyword">return</span> deepMerge(val1)</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> val1 !== <span class="string">'undefined'</span>) &#123;</div><div class="line">    <span class="keyword">return</span> val1</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> stratKeysDeepMerge = [<span class="string">'headers'</span>]</div><div class="line"></div><div class="line">stratKeysDeepMerge.forEach(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</div><div class="line">  strats[key] = deepMergeStrat</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p><code>deepMerge</code>的实现：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepMerge</span>(<span class="params">...objs</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> result = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</div><div class="line"></div><div class="line">  objs.forEach(<span class="function"><span class="params">obj</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (obj) &#123;</div><div class="line">      <span class="built_in">Object</span>.keys(obj).forEach(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</div><div class="line">        <span class="keyword">const</span> val = obj[key]</div><div class="line">        <span class="keyword">if</span> (isPlainObject(val)) &#123;</div><div class="line">          <span class="keyword">if</span> (isPlainObject(result[key])) &#123;</div><div class="line">            result[key] = deepMerge(result[key], val)</div><div class="line">          &#125; <span class="keyword">else</span> &#123;</div><div class="line">            result[key] = deepMerge(&#123;&#125;, val)</div><div class="line">          &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          result[key] = val</div><div class="line">        &#125;</div><div class="line">      &#125;)</div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  <span class="keyword">return</span> result</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对于 <code>headers</code> 这类的复杂对象属性，我们需要使用深拷贝的方式，同时也处理了其它一些情况，因为它们也可能是一个非对象的普通值。未来我们讲到认证授权的时候，<code>auth</code> 属性也是这个合并策略。</p>
+<p>最后我们合并配置的逻辑：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> config = mergeConfig(defaults, &#123;</div><div class="line">  url: <span class="string">'/foo?name=bar'</span>,</div><div class="line">  method: <span class="string">'post'</span>,</div><div class="line">  data: &#123;</div><div class="line">    name: <span class="string">'dhuang'</span></div><div class="line">  &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'mergeConfig:'</span>, <span class="built_in">JSON</span>.stringify(config, <span class="literal">null</span>, <span class="number">2</span>))</div><div class="line"></div><div class="line"><span class="comment">// mergeConfig: &#123;</span></div><div class="line"><span class="comment">//   "url": "/foo?name=bar",</span></div><div class="line"><span class="comment">//   "method": "post",</span></div><div class="line"><span class="comment">//   "data": &#123;</span></div><div class="line"><span class="comment">//     "name": "dhuang"</span></div><div class="line"><span class="comment">//   &#125;,</span></div><div class="line"><span class="comment">//   "timeout": 0,</span></div><div class="line"><span class="comment">//   "headers": &#123;</span></div><div class="line"><span class="comment">//     "common": &#123;</span></div><div class="line"><span class="comment">//       "Accept": "application/json, text/plain, */*"</span></div><div class="line"><span class="comment">//     &#125;,</span></div><div class="line"><span class="comment">//     "delete": &#123;&#125;,</span></div><div class="line"><span class="comment">//     "get": &#123;&#125;,</span></div><div class="line"><span class="comment">//     "head": &#123;&#125;,</span></div><div class="line"><span class="comment">//     "options": &#123;&#125;,</span></div><div class="line"><span class="comment">//     "post": &#123;</span></div><div class="line"><span class="comment">//       "Content-Type": "application/x-www-form-urlencoded"</span></div><div class="line"><span class="comment">//     &#125;,</span></div><div class="line"><span class="comment">//     "put": &#123;</span></div><div class="line"><span class="comment">//       "Content-Type": "application/x-www-form-urlencoded"</span></div><div class="line"><span class="comment">//     &#125;,</span></div><div class="line"><span class="comment">//     "patch": &#123;</span></div><div class="line"><span class="comment">//       "Content-Type": "application/x-www-form-urlencoded"</span></div><div class="line"><span class="comment">//     &#125;</span></div><div class="line"><span class="comment">//   &#125;</span></div><div class="line"><span class="comment">// &#125;</span></div></pre></td></tr></table></figure>
+<h2 id="flatten-headers"><a href="#flatten-headers" class="headerlink" title="flatten headers"></a>flatten headers</h2><p>经过合并后的配置中的 <code>headers</code> 是一个复杂对象，多了 <code>common</code>、<code>post</code>、<code>get</code> 等属性，而这些属性中的值才是我们要真正添加到请求 <code>header</code> 中的。</p>
+<p> 举个例子：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">headers: &#123;</div><div class="line">  common: &#123;</div><div class="line">    Accept: <span class="string">'application/json, text/plain, */*'</span></div><div class="line">  &#125;,</div><div class="line">  post: &#123;</div><div class="line">    <span class="string">'Content-Type'</span>:<span class="string">'application/x-www-form-urlencoded'</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们需要把它压成一级的，如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">headers: &#123;</div><div class="line">  Accept: <span class="string">'application/json, text/plain, */*'</span>,</div><div class="line"> <span class="string">'Content-Type'</span>:<span class="string">'application/x-www-form-urlencoded'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里要注意的是，对于 <code>common</code> 中定义的 <code>header</code> 字段，我们都要提取，而对于 <code>post</code>、<code>get</code> 这类提取，需要和该次请求的方法对应。</p>
+<p>接下来我们实现 <code>flattenHeaders</code> 方法。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">flattenHeaders</span>(<span class="params">headers, method</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!headers) &#123;</div><div class="line">    <span class="keyword">return</span> headers</div><div class="line">  &#125;</div><div class="line">  headers = deepMerge(headers.common || &#123;&#125;, headers[method] || &#123;&#125;, headers)</div><div class="line"></div><div class="line">  <span class="keyword">const</span> methodsToDelete = [<span class="string">'delete'</span>, <span class="string">'get'</span>, <span class="string">'head'</span>, <span class="string">'options'</span>, <span class="string">'post'</span>, <span class="string">'put'</span>, <span class="string">'patch'</span>, <span class="string">'common'</span>]</div><div class="line"></div><div class="line">  methodsToDelete.forEach(<span class="function"><span class="params">method</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">delete</span> headers[method]</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  <span class="keyword">return</span> headers</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们可以通过 <code>deepMerge</code> 的方式把 <code>common</code>、<code>post</code> 的属性拷贝到 <code>headers</code> 这一级，然后再把 <code>common</code>、<code>post</code> 这些属性删掉。 </p>
+<p>然后我们在真正发送请求前执行这个逻辑。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">processConfig</span>(<span class="params">config</span>) </span>&#123;</div><div class="line">  config.headers = flattenHeaders(config.headers, config.method)</div><div class="line"></div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'flattenHeaders:'</span>, <span class="built_in">JSON</span>.stringify(config, <span class="literal">null</span>, <span class="number">2</span>))</div><div class="line"></div><div class="line">  <span class="comment">// flattenHeaders: &#123;</span></div><div class="line">  <span class="comment">//   "url": "/foo?name=bar",</span></div><div class="line">  <span class="comment">//   "method": "post",</span></div><div class="line">  <span class="comment">//   "data": &#123;</span></div><div class="line">  <span class="comment">//       "name": "dhuang"</span></div><div class="line">  <span class="comment">//   &#125;,</span></div><div class="line">  <span class="comment">//   "timeout": 0,</span></div><div class="line">  <span class="comment">//   "headers": &#123;</span></div><div class="line">  <span class="comment">//       "Accept": "application/json, text/plain, */*",</span></div><div class="line">  <span class="comment">//       "Content-Type": "application/x-www-form-urlencoded"</span></div><div class="line">  <span class="comment">//   &#125;</span></div><div class="line">  <span class="comment">// &#125;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样确保我们了配置中的 <code>headers</code> 是可以正确添加到请求 <code>header</code> 中的</p>
+<h2 id="demo-编写"><a href="#demo-编写" class="headerlink" title="demo 编写"></a>demo 编写</h2><p>略</p>
+<p>至此，我们合并配置的逻辑就实现完了。</p>
+
+          
+        
+      
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/14/axios之拦截器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -440,10 +638,10 @@
 <p>此外，我们也可以支持删除某个拦截器，如下：</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> interceptorId = axios.interceptors.response.use(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</div><div class="line">    res.data.name += <span class="string">'2'</span></div><div class="line">    <span class="keyword">return</span> res</div><div class="line">&#125;)</div><div class="line">axios.interceptors.response.eject(interceptorId)</div></pre></td></tr></table></figure>
 <h2 id="整体设计"><a href="#整体设计" class="headerlink" title="整体设计"></a>整体设计</h2><p>我们先用一张图来展示一下拦截器工作流程：</p>
-<p><img src="/2020/02/14/axios之拦截器/interceptor.png" alt="Alt text"><br><img :src="$withBase('/interceptor.png')" alt="interceptor"></p>
+<p><img src="/2020/02/14/axios之拦截器/interceptor.png" alt="Alt text"></p>
 <p>整个过程是一个链式调用的方式，并且每个拦截器都可以支持同步和异步处理，我们自然而然地就联想到使用 Promise 链的方式来实现整个调用过程。</p>
 <p>在这个 Promise 链的执行过程中，请求拦截器 <code>resolve</code> 函数处理的是 <code>config</code> 对象，而响应拦截器 <code>resolve</code> 函数处理的是 <code>response</code> 对象。</p>
-<p>在了解了拦截器工作流程后，我们先要创建一个拦截器管理类，允许我们去添加<br>删除和遍历拦截器。</p>
+<p>在了解了拦截器工作流程后，我们先要创建一个拦截器管理类，允许我们去添加、删除和遍历拦截器。</p>
 <h2 id="拦截器管理类实现"><a href="#拦截器管理类实现" class="headerlink" title="拦截器管理类实现"></a>拦截器管理类实现</h2><p>根据需求，<code>axios</code> 拥有一个 <code>interceptors</code> 对象属性，该属性又有 <code>request</code> 和 <code>response</code> 2 个属性，它们对外提供一个 <code>use</code> 方法来添加拦截器，我们可以把这俩属性看做是一个拦截器管理对象。<code>use</code> 方法支持 2 个参数，第一个是 <code>resolve</code> 函数，第二个是 <code>reject</code> 函数，对于 <code>resolve</code> 函数的参数，请求拦截器是 <code>config</code> 的，而响应拦截器是 <code>response</code> 的。</p>
 <h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> InterceptorManager &#123;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123;</div><div class="line">    <span class="keyword">this</span>.interceptors = []</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  use(resolved, rejected) &#123;</div><div class="line">    <span class="keyword">this</span>.interceptors.push(&#123;</div><div class="line">      resolved,</div><div class="line">      rejected</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.interceptors.length - <span class="number">1</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  forEach(fn) &#123;</div><div class="line">    <span class="keyword">this</span>.interceptors.forEach(<span class="function"><span class="params">interceptor</span> =&gt;</span> &#123;</div><div class="line">      <span class="keyword">if</span> (interceptor !== <span class="literal">null</span>) &#123;</div><div class="line">        fn(interceptor)</div><div class="line">      &#125;</div><div class="line">    &#125;)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  eject(id) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.interceptors[id]) &#123;</div><div class="line">      <span class="keyword">this</span>.interceptors[id] = <span class="literal">null</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>我们定义了一个 <code>InterceptorManager</code> 类，内部维护了一个私有属性 <code>interceptors</code>，它是一个数组，用来存储拦截器。该类还对外提供了 3 个方法，其中 <code>use</code> 接口就是添加拦截器到 <code>interceptors</code> 中，并返回一个 <code>id</code> 用于删除；<code>forEach</code> 接口就是遍历 <code>interceptors</code> 用的，它支持传入一个函数，遍历过程中会调用该函数，并把每一个 <code>interceptor</code> 作为该函数的参数传入；<code>eject</code> 就是删除一个拦截器，通过传入拦截器的 <code>id</code> 删除。</p>
@@ -454,7 +652,7 @@
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> Axios &#123;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123;</div><div class="line">    <span class="keyword">this</span>.interceptors = &#123;</div><div class="line">      request: <span class="keyword">new</span> InterceptorManager(),</div><div class="line">      response: <span class="keyword">new</span> InterceptorManager()</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><code>Interceptors</code> 类型拥有 2 个属性，一个请求拦截器管理类实例，一个是响应拦截器管理类实例。我们在实例化 <code>Axios</code> 类的时候，在它的构造器去初始化这个 <code>interceptors</code> 实例属性。</p>
 <p>接下来，我们在 <code>request</code> 方法中添加拦截器链式调用的逻辑：</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> Axios &#123;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123;</div><div class="line">    <span class="keyword">this</span>.interceptors = &#123;</div><div class="line">      request: <span class="keyword">new</span> InterceptorManager(),</div><div class="line">      response: <span class="keyword">new</span> InterceptorManager()</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  request(url, config) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> url === <span class="string">'string'</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (!config) &#123;</div><div class="line">        config = &#123;&#125;</div><div class="line">      &#125;</div><div class="line">      config.url = url</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      config = url</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> chain = [</div><div class="line">      &#123; resolved: dispatchRequest, rejected: <span class="literal">undefined</span> &#125;</div><div class="line">    ]</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.interceptors.request.forEach(<span class="function"><span class="params">interceptor</span> =&gt;</span> &#123;</div><div class="line">      chain.unshift(interceptor)</div><div class="line">    &#125;)</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">this</span>.interceptors.response.forEach(<span class="function"><span class="params">interceptor</span> =&gt;</span> &#123;</div><div class="line">      chain.push(interceptor)</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    <span class="keyword">let</span> promise = <span class="built_in">Promise</span>.resolve(config)</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (chain.length) &#123;</div><div class="line">      <span class="keyword">const</span> &#123; resolved, rejected &#125; = chain.shift()</div><div class="line"></div><div class="line">      promise = promise.then(resolved, rejected)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> promise</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> Axios &#123;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123;</div><div class="line">    <span class="keyword">this</span>.interceptors = &#123;</div><div class="line">      request: <span class="keyword">new</span> InterceptorManager(),</div><div class="line">      response: <span class="keyword">new</span> InterceptorManager()</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  request(url, config) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> url === <span class="string">'string'</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (!config) &#123;</div><div class="line">        config = &#123;&#125;</div><div class="line">      &#125;</div><div class="line">      config.url = url</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      config = url</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> chain = [</div><div class="line">      &#123; resolved: dispatchRequest, rejected: <span class="literal">undefined</span> &#125;</div><div class="line">    ]</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.interceptors.request.forEach(<span class="function"><span class="params">interceptor</span> =&gt;</span> &#123;</div><div class="line">      chain.unshift(interceptor)</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.interceptors.response.forEach(<span class="function"><span class="params">interceptor</span> =&gt;</span> &#123;</div><div class="line">      chain.push(interceptor)</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    <span class="keyword">let</span> promise = <span class="built_in">Promise</span>.resolve(config)</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (chain.length) &#123;</div><div class="line">      <span class="keyword">const</span> &#123; resolved, rejected &#125; = chain.shift()</div><div class="line"></div><div class="line">      promise = promise.then(resolved, rejected)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> promise</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>函数<code>dispatchRequest</code>中的伪代码如下：</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">dispatchRequest</span>(<span class="params">config</span>) </span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'requestConfig:'</span>, config)</div><div class="line">  <span class="comment">// &#123;"params":&#123;"name":"dhuang321"&#125;,"url":"/foo?name=bar"&#125;</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">xhr</span>(<span class="params">config</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</div><div class="line"></div><div class="line">      <span class="keyword">const</span> request = <span class="keyword">new</span> XMLHttpRequest()</div><div class="line"></div><div class="line">      <span class="keyword">const</span> response = &#123;</div><div class="line">        data: &#123;</div><div class="line">          name: <span class="string">'axios'</span>,</div><div class="line">          desc: <span class="string">'interceptor'</span></div><div class="line">        &#125;,</div><div class="line">        status: <span class="number">200</span>,</div><div class="line">        statusText: <span class="string">'&#123;"name":"axios","desc":"interceptor"&#125;'</span>,</div><div class="line">        config,</div><div class="line">        request</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">        resolve(response)</div><div class="line">      &#125;, <span class="number">500</span>)</div><div class="line"></div><div class="line">      setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">        resolve(reject)</div><div class="line">      &#125;, <span class="number">1500</span>)</div><div class="line">    &#125;)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> xhr(config)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>首先，构造一个数组 <code>chain</code>，并把 <code>dispatchRequest</code> 函数赋值给 <code>resolved</code> 属性；接着先遍历请求拦截器插入到 <code>chain</code> 的前面；然后再遍历响应拦截器插入到 <code>chain</code> 后面。</p>
@@ -2335,257 +2533,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/22/Angular入门之简介/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengChe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="风车's Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/22/Angular入门之简介/" itemprop="url">Angular入门之简介</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-22T14:18:46+08:00">
-                2018-09-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Angular/" itemprop="url" rel="index">
-                    <span itemprop="name">Angular</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/09/22/Angular入门之简介/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/09/22/Angular入门之简介/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="angularJS的优点"><a href="#angularJS的优点" class="headerlink" title="angularJS的优点"></a><code>angularJS</code>的优点</h3><ul>
-<li>模板功能强大丰富</li>
-<li>比较完善的前端<code>MVC</code>框架</li>
-<li>引入了<code>Java</code>的一些概念</li>
-</ul>
-<h3 id="angularJS的一些问题，和Angular之间的对比"><a href="#angularJS的一些问题，和Angular之间的对比" class="headerlink" title="angularJS的一些问题，和Angular之间的对比"></a><code>angularJS</code>的一些问题，和<code>Angular</code>之间的对比</h3><ul>
-<li>性能<ul>
-<li>双向数据绑定是一把双刃剑，随着组件的增加，项目越来越复杂，双向数据绑定会带来性能问题</li>
-<li>脏检查机制，通过跟踪数据的改变来动态的更新用户的界面，随着绑定的增加，性能就会越来越低</li>
-<li>在<code>Angular</code>中，这个做法被废弃掉了，首先数据绑定默认不再是双向数据绑定了，而是单向数据绑定，其次整个检查机制被完全重写，整体性能得到很大的提升</li>
-</ul>
-</li>
-<li>路由（非常简单的路由功能）<ul>
-<li><code>ng-route</code>中的<code>ng-view</code>指令只能有一个，不能嵌套多个视图</li>
-<li>第三方模块<code>ui-router</code>也不是很灵活</li>
-<li>在<code>Angular</code>中，路由作为核心模块之一，对其进行了很大的提升，可以说很强大</li>
-</ul>
-</li>
-<li>作用域<ul>
-<li><code>angularJS</code>的作用域把它的执行环境和浏览器的环境隔离开，所有原生事件都不能影响它的作用域，都必须用带有ng开头的指令来交互，如果你想用原生事件，就必须调用<code>$scope.$apply</code>来告诉<code>angularJS</code>我的数据已经有更新了，你帮我同步去更新一些UI吧！</li>
-<li>这个问题，在<code>Angular</code>中也被解决掉了，<code>$scope</code>这个东西在<code>Angular</code>中不复存在，任何原生的事件都可以直接被响应及处理</li>
-</ul>
-</li>
-<li>表单验证<ul>
-<li>在<code>angularJS</code>中，显示表单验证的错误信息提示是比较薄弱的</li>
-<li>在<code>Angular</code>中提供了全新的模板API，尤其是响应式表单，可以帮助我们实现功能复杂的校验，并且显示错误信息</li>
-</ul>
-</li>
-<li>Javascript语言<ul>
-<li>在<code>Angular</code>中使用<code>typescript</code>来开发，它是ES6规范的一个超集，带有完善的类型系统，这使得我们可以在编译阶段解决部分<code>bug</code>，从而使运行时的<code>bug</code>减少，还可以在<code>IDE</code>中获得更好的代码提示，及更快的性能</li>
-</ul>
-</li>
-<li>学习成本<ul>
-<li>学习<code>angularJS</code>成本高，需要掌握很多概念，包括<code>模块</code>、<code>控制器</code>、<code>指令</code>、<code>作用域</code>、<code>模板</code>、<code>数据绑定</code>、<code>过滤器</code>、<code>依赖注入</code>等等，你很难一下子说出它的核心到底是什么</li>
-<li>而<code>Angular</code>的核心就是<code>组件</code>，剩下所有的东西，都是为<code>组件</code>服务的</li>
-</ul>
-</li>
-</ul>
-<h3 id="Angular新特性"><a href="#Angular新特性" class="headerlink" title="Angular新特性"></a><code>Angular</code>新特性</h3><ul>
-<li>全新的命令行工具<code>AngularCLI</code>，它提供了很多方便的功能来帮我们进行开发，比如：<ul>
-<li>生成一个新项目的骨架</li>
-<li>生成组件需要的基础代码</li>
-<li>作为开发服务器，供我们<code>调试</code>、<code>编译</code>、<code>构建</code>并且<code>部署</code>我们的代码</li>
-<li>运行自动化的<code>单元测试</code></li>
-</ul>
-</li>
-<li>服务器端渲染<ul>
-<li>它可以使一个原本需要<code>10s</code>才能加载完的单页应用在<code>1s</code>之内呈现在用户面前</li>
-<li>它可以使一个单页应用针对每一个视图去做<code>SEO</code>（搜索引擎优化），对单页应用它只有一个页面，所以要做<code>SEO</code>是一个很麻烦的事情，服务器端的渲染可以是这个效果大大的提升</li>
-</ul>
-</li>
-<li>移动和桌面兼容<ul>
-<li><code>Angular</code>中对移动的支持提升到新的高度，借助<code>Ionic</code>、<code>NativeScript</code>结合<code>Angular</code>可以很容易的创建出跨平台的手机应用</li>
-<li><code>Angular</code>还提供一个官方的UI库，叫做<code>Angular Material</code>，提供移动应用和桌面应用通用UI组件</li>
-</ul>
-</li>
-</ul>
-<h3 id="angularJS的架构"><a href="#angularJS的架构" class="headerlink" title="angularJS的架构"></a><code>angularJS</code>的架构</h3><p><img src="/2018/09/22/Angular入门之简介/jiagou1.png" alt="Alt text"></p>
-<h3 id="Angular的架构"><a href="#Angular的架构" class="headerlink" title="Angular的架构"></a><code>Angular</code>的架构</h3><p><img src="/2018/09/22/Angular入门之简介/jiagou2.png" alt="Alt text"></p>
-<ul>
-<li>模块：用来将应用中不同的部分组织成一个<code>Angular</code>框架可以理解的单元</li>
-<li>组件：是<code>Angular</code>应用的基本构建快，你可以把一个组件理解为一段带有业务逻辑和数据的HTML</li>
-<li>指令：允许你向HTML元素添加自定义行为</li>
-<li>服务：用来封装可重用的业务逻辑</li>
-</ul>
-<h3 id="Angular的组件"><a href="#Angular的组件" class="headerlink" title="Angular的组件"></a><code>Angular</code>的组件</h3><p><img src="/2018/09/22/Angular入门之简介/component.png" alt="Alt text"></p>
-<h3 id="与React对比"><a href="#与React对比" class="headerlink" title="与React对比"></a>与<code>React</code>对比</h3><ul>
-<li>速度快（<code>虚拟DOM</code>）；只有在调用<code>setState</code>方法时，去更新DOM，而且还是先更新虚拟DOM，然后和实际的DOM比较，再更新实际的DOM，比起<code>angularJS</code>的绑定来说，更新DOM的次数少，且更新DOM的内容少</li>
-<li>FLUX架构（<code>Redux</code>）</li>
-<li>服务器渲染</li>
-</ul>
-<h3 id="与Vue对比"><a href="#与Vue对比" class="headerlink" title="与Vue对比"></a>与<code>Vue</code>对比</h3><ul>
-<li>简单<ul>
-<li>只需一个<code>.vue</code>文件</li>
-</ul>
-</li>
-<li>灵活<ul>
-<li><code>vue-cli</code></li>
-</ul>
-</li>
-<li>性能<ul>
-<li>库很小</li>
-</ul>
-</li>
-<li>个人主导</li>
-<li>只关注web</li>
-<li>服务器渲染<ul>
-<li>依靠第三方</li>
-</ul>
-</li>
-</ul>
-<h3 id="Angular"><a href="#Angular" class="headerlink" title="Angular"></a><code>Angular</code></h3><ul>
-<li>继承<code>angularJS</code></li>
-<li>吸收<code>React</code></li>
-</ul>
-
-          
-        
-      
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2636,7 +2583,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
