@@ -325,6 +325,256 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/17/Vue之深入响应式原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengChe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风车's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/17/Vue之深入响应式原理/" itemprop="url">Vue之深入响应式原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-17T11:26:07+08:00">
+                2020-02-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/02/17/Vue之深入响应式原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/02/17/Vue之深入响应式原理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一、深入响应式原理"><a href="#一、深入响应式原理" class="headerlink" title="一、深入响应式原理"></a>一、深入响应式原理</h1><p>Vue 的数据驱动除了数据渲染 <code>DOM</code> 之外，还有一个很重要的体现就是数据的变更会触发 <code>DOM</code> 的变化，即处理用户交互。<br>下面我们就分析一下用户交互或者是其它方面导致数据发生变化重新对页面渲染的原理。</p>
+<p>考虑如下示例：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 这里的Vue是自己实现简版的Vue，render函数这里并没有返回虚拟DOM</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> vm = <span class="keyword">new</span> Vue(&#123;</div><div class="line">  el: <span class="string">'#app'</span>,</div><div class="line">  data: &#123;</div><div class="line">    name: <span class="string">'vue-1'</span></div><div class="line">  &#125;,</div><div class="line">  render() &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.name</div><div class="line">  &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'vm:'</span>, vm)</div><div class="line"></div><div class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  vm.name = <span class="string">'vue-'</span> + <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">100</span>)</div><div class="line">&#125;, <span class="number">1000</span>)</div></pre></td></tr></table></figure>
+<p>当我们去修改 <code>vm.message</code> 的时候，div容器内容也会渲染成新的数据，那么这一切是怎么做到的呢？</p>
+<p>在分析前，我们先直观的想一下，如果不用 Vue 的话，我们会通过最简单的方法实现这个需求：定时器过<code>1000ms</code>之后，数据被修改，然后手动操作 DOM 重新渲染。这个过程和使用 Vue 的最大区别就是多了一步“手动操作 DOM 重新渲染”。这一步看上去并不多，但它背后又潜在的几个要处理的问题：</p>
+<ol>
+<li><p><code>我需要修改哪块的 DOM？</code></p>
+</li>
+<li><p><code>我的修改效率和性能是不是最优的？</code></p>
+</li>
+<li><p><code>我需要对数据每一次的修改都去操作 DOM 吗？</code></p>
+</li>
+<li><p><code>我需要 case by case 去写修改 DOM 的逻辑吗？</code></p>
+</li>
+</ol>
+<p>如果我们使用了 Vue，那么上面几个问题 Vue 内部就帮你做了，那么 Vue 是如何在我们对数据修改后自动做这些事情呢，接下来我们将进入一些 Vue 响应式系统的底层的细节。</p>
+<h1 id="二、响应式对象"><a href="#二、响应式对象" class="headerlink" title="二、响应式对象"></a>二、响应式对象</h1><p>可能很多小伙伴之前都了解过 Vue.js 实现响应式的核心是利用了 ES5 的 <code>Object.defineProperty</code>，这也是为什么 Vue.js 不能兼容 IE8 及以下浏览器的原因，我们先来对它有个直观的认识。</p>
+<h2 id="Object-defineProperty"><a href="#Object-defineProperty" class="headerlink" title="Object.defineProperty"></a>Object.defineProperty</h2><p><code>Object.defineProperty</code> 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象，先来看一下它的语法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(obj, prop, descriptor)</div></pre></td></tr></table></figure>
+<p><code>obj</code> 是要在其上定义属性的对象；<code>prop</code> 是要定义或修改的属性的名称；<code>descriptor</code> 是将被定义或修改的属性描述符。</p>
+<p>比较核心的是 <code>descriptor</code>，它有很多可选键值，具体的可以去参阅它的<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank" rel="noopener">文档</a>。这里我们最关心的是 <code>get</code> 和 <code>set</code>，<code>get</code> 是一个给属性提供的 <strong>getter</strong> 方法，当我们<strong>访问</strong>了该属性的时候会触发 <strong>getter</strong> 方法；<code>set</code> 是一个给属性提供的 <strong>setter</strong> 方法，当我们对该属性做<strong>修改</strong>的时候会触发 <strong>setter</strong> 方法。</p>
+<p>一旦对象拥有了 <strong>getter</strong> 和 <strong>setter</strong>，我们可以简单地把这个对象称为响应式对象。那么 Vue.js 把哪些对象变成了响应式对象了呢，接下来我们从源码层面分析。</p>
+<h2 id="简版Vue"><a href="#简版Vue" class="headerlink" title="简版Vue"></a>简版Vue</h2><p>先看下简版Vue的实现：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; Watcher &#125; <span class="keyword">from</span> <span class="string">'./Watcher'</span></div><div class="line"><span class="keyword">import</span> &#123; observe &#125; <span class="keyword">from</span> <span class="string">'./observe'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Vue</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(options = &#123;&#125;) &#123;</div><div class="line">    <span class="keyword">this</span>._init(options)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  _init(options) &#123;</div><div class="line">    <span class="keyword">this</span>.$options = options</div><div class="line"></div><div class="line">    <span class="keyword">this</span>._initState()</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.$options.el) &#123;</div><div class="line">      <span class="keyword">this</span>.$mount(<span class="keyword">this</span>.$options.el)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  _initState() &#123;</div><div class="line">    <span class="keyword">this</span>._watchers = []</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.$options.data) &#123;</div><div class="line">      <span class="keyword">this</span>._initData()</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  _initData() &#123;</div><div class="line">    <span class="keyword">let</span> data = <span class="keyword">this</span>.$options.data</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      data = <span class="keyword">this</span>._data = <span class="keyword">typeof</span> data === <span class="string">'function'</span></div><div class="line">        ? data.call(<span class="keyword">this</span>, <span class="keyword">this</span>)</div><div class="line">        : data || &#123;&#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">      data = &#123;&#125;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123; &#125;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(data)</div><div class="line"></div><div class="line">    <span class="keyword">let</span> i = keys.length</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (i--) &#123;</div><div class="line">      <span class="keyword">const</span> key = keys[i]</div><div class="line">      proxy(<span class="keyword">this</span>, <span class="string">'_data'</span>, key)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// observe data</span></div><div class="line">    observe(data, <span class="literal">true</span>)<span class="comment">/* asRootData */</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  $mount(el) &#123;</div><div class="line">    <span class="keyword">this</span>.$el = el &amp;&amp; <span class="built_in">document</span>.querySelector(el)</div><div class="line"></div><div class="line">    <span class="keyword">let</span> updateComponent = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">      <span class="keyword">this</span>._update(<span class="keyword">this</span>._render())</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">new</span> Watcher(<span class="keyword">this</span>, updateComponent, () =&gt; &#123; &#125;, &#123;&#125;, <span class="literal">true</span>)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  _render() &#123;</div><div class="line">    <span class="keyword">const</span> &#123; render &#125; = <span class="keyword">this</span>.$options</div><div class="line">    <span class="keyword">let</span> val</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      val = render.call(<span class="keyword">this</span>)</div><div class="line">    &#125; <span class="keyword">catch</span> (e) &#123; &#125; <span class="keyword">finally</span> &#123; &#125;</div><div class="line">    <span class="keyword">return</span> val</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  _update(val) &#123;</div><div class="line">    <span class="keyword">this</span>.$el = <span class="keyword">this</span>.__patch__(<span class="keyword">this</span>.$el, val)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  __patch__($el, val) &#123;</div><div class="line">    <span class="comment">// TODO</span></div><div class="line">    $el.innerText = val</div><div class="line">    <span class="keyword">return</span> $el</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="initState"><a href="#initState" class="headerlink" title="_initState"></a>_initState</h2><p>在 Vue 的初始化阶段，<code>_init</code> 方法执行的时候，会执行 <code>_initState()</code> 方法。</p>
+<p>源码 <code>initState</code> 方法主要是对 <code>props</code>、<code>methods</code>、<code>data</code>、<code>computed</code> 和 <code>wathcer</code> 等属性做了初始化操作。这里我们主要分析 <code>data</code>，对于其它属性的初始化我们之后再详细分析。</p>
+<h3 id="initData"><a href="#initData" class="headerlink" title="_initData"></a>_initData</h3><p><code>data</code> 的初始化主要过程做两件事，<strong>一个是对传入 <code>data</code> 对象挂载到 <code>vm._data</code> 下，然后将其进行属性遍历，通过 <code>proxy</code> 函数把每一个属性 <code>vm._data.xxx</code> 都代理到 <code>vm.xxx</code> 上</strong>；<strong>另一个是调用 <code>observe</code> 方法观测整个 <code>data</code> 的变化，把 <code>data</code> 也变成响应式</strong>。</p>
+<h2 id="proxy"><a href="#proxy" class="headerlink" title="proxy"></a>proxy</h2><p>首先介绍一下代理，代理的作用是把 <code>data</code> 上的属性代理到 <code>vm</code> 实例上，这也就是为什么我们定义了如下 <code>data</code>，却可以通过 <code>vm</code> 实例访问到它。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> vm = <span class="keyword">new</span> Vue(&#123;</div><div class="line">  el: <span class="string">'#app'</span>,</div><div class="line">  data: &#123;</div><div class="line">    message: <span class="string">'vue-1'</span></div><div class="line">  &#125;,</div><div class="line">  render() &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.message</div><div class="line">  &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'message:'</span>, vm.message)</div></pre></td></tr></table></figure>
+<p>我们可以通过 <code>vm.message</code> 访问到我们定义在 <code>data</code> 中的 <code>message</code>，这个过程发生在 <code>proxy</code> 阶段：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">proxy</span>(<span class="params">target, sourceKey, key</span>) </span>&#123;</div><div class="line">  <span class="built_in">Object</span>.defineProperty(target, key, &#123;</div><div class="line">    enumerable: <span class="literal">true</span>,</div><div class="line">    configurable: <span class="literal">true</span>,</div><div class="line">    get: <span class="function"><span class="keyword">function</span> <span class="title">proxyGetter</span>(<span class="params"></span>) </span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>[sourceKey][key]</div><div class="line">    &#125;,</div><div class="line">    set: <span class="function"><span class="keyword">function</span> <span class="title">proxySetter</span>(<span class="params">val</span>) </span>&#123;</div><div class="line">      <span class="keyword">this</span>[sourceKey][key] = val</div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>proxy</code> 方法的实现很简单，通过 <code>Object.defineProperty</code> 把 <code>target[sourceKey][key]</code> 的读写变成了对 <code>target[key]</code>  的读写。所以对于 <code>data</code> 而言，对 <code>vm._data.xxx</code> 的读写变成了对 <code>vm.xxx</code> 的读写，而 <code>data</code> 对象就是挂载到 <code>vm._data</code> 下，反之我们通过 <code>vm.xxx</code> 就可以访问到定义在 <code>data</code> 对象中的 <code>xxx</code> 属性了。</p>
+<h2 id="observe"><a href="#observe" class="headerlink" title="observe"></a>observe</h2><p><code>observe</code> 的功能就是用来监测数据的变化。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 尝试为某个值创建一个观察者实例，</span></div><div class="line"><span class="comment"> * 如果成功观察到该观察者，则返回新观察者，</span></div><div class="line"><span class="comment"> * 如果该值已经包含一个观察者，则返回现有观察者。</span></div><div class="line"><span class="comment"> * @param value </span></div><div class="line"><span class="comment"> * @param asRootData </span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">observe</span>(<span class="params">value, asRootData</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!isObject(value)) &#123;</div><div class="line">    <span class="keyword">return</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">let</span> ob</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (hasOwn(value, <span class="string">'__ob__'</span>) &amp;&amp; value.__ob__ <span class="keyword">instanceof</span> Observer) &#123;</div><div class="line">    ob = value.__ob__</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (</div><div class="line">    <span class="built_in">Array</span>.isArray(value) ||</div><div class="line">    isPlainObject(value)</div><div class="line">  ) &#123;</div><div class="line">    ob = <span class="keyword">new</span> Observer(value)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (asRootData &amp;&amp; ob) &#123;</div><div class="line">    ob.vmCount++</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> ob</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>observe</code> 方法的作用就是给对象类型数据 <code>value</code> 添加一个 <code>Observer</code> 实例对象 <code>ob</code>，如果已经添加过则直接返回，否则在满足一定条件下去实例化一个 <code>Observer</code> 实例对象。接下来我们来看一下 <code>Observer</code> 的作用。</p>
+<h2 id="Observer"><a href="#Observer" class="headerlink" title="Observer"></a>Observer</h2><p><code>Observer</code> 是一个类，它的作用是给数据对象 <code>value</code> 添加 <code>Observer</code> 的实例对象，即保存到 <code>value</code> 的 <code>__ob__</code> 不可枚举属性下，还遍历该数据对象 <code>value</code> 的属性来添加 <strong>getter</strong> 和 <strong>setter</strong>，用于依赖收集和派发更新：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 附加到每个观察对象的Observer类。</span></div><div class="line"><span class="comment"> * 附加后，观察者将目标对象的属性转换为</span></div><div class="line"><span class="comment"> * 用于收集依赖关系并调度更新的getter/setter</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">Observer</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(value) &#123;</div><div class="line">    <span class="keyword">this</span>.value = value</div><div class="line">    <span class="keyword">this</span>.vmCount = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="comment">// 缓存当前实例到 value.__ob__ 下，并且不作枚举</span></div><div class="line">    def(value, <span class="string">'__ob__'</span>, <span class="keyword">this</span>)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value)) &#123;</div><div class="line">      <span class="comment">// 数组 TODO</span></div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">this</span>.walk(value)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line"><span class="comment">   * 遍历所有属性并将它们转换为getter/setter。</span></div><div class="line"><span class="comment">   * 仅当值类型为Object时才应调用此方法</span></div><div class="line"><span class="comment">   * @param obj </span></div><div class="line"><span class="comment">   */</span></div><div class="line">  walk(obj) &#123;</div><div class="line">    <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(obj)</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; keys.length; i++) &#123;</div><div class="line">      defineReactive(obj, keys[i])</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>Observer</code> 的构造函数逻辑很简单，通过执行 <code>def</code> 函数把自身实例添加到数据对象 <code>value</code> 的 <code>__ob__</code> 属性上，<code>def</code> 的定义如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Define a property.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">def</span>(<span class="params">obj, key, val, enumerable</span>) </span>&#123;</div><div class="line">  <span class="built_in">Object</span>.defineProperty(obj, key, &#123;</div><div class="line">    value: val,</div><div class="line">    enumerable: !!enumerable,</div><div class="line">    writable: <span class="literal">true</span>,</div><div class="line">    configurable: <span class="literal">true</span></div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>def</code> 函数是一个非常简单的<code>Object.defineProperty</code> 的封装，这就是为什么我在开发中输出 <code>data</code> 上对象类型的数据，会发现该对象多了一个 <code>__ob__</code> 的属性。</p>
+<p>回到 <code>Observer</code> 的构造函数，接下来会对 <code>value</code> 做判断，对于<strong>数组</strong>这里暂不分析，对于<strong>纯对象</strong>，则调用 <code>walk</code> 方法，即遍历对象的 key 调用 <code>defineReactive</code> 方法，那么我们来看一下这个方法是做什么的。</p>
+<h2 id="defineReactive"><a href="#defineReactive" class="headerlink" title="defineReactive"></a>defineReactive</h2><p><code>defineReactive</code> 的功能就是<strong>定义一个响应式对象</strong>，给数据对象动态添加 <strong>getter</strong> 和 <strong>setter</strong>，此时这两个方法是<strong>不会被调用</strong>的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 在对象上定义反应性属性。</span></div><div class="line"><span class="comment"> * @param obj </span></div><div class="line"><span class="comment"> * @param key </span></div><div class="line"><span class="comment"> * @param val </span></div><div class="line"><span class="comment"> * @param constructor </span></div><div class="line"><span class="comment"> * @param shallow 是否深度观测</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">defineReactive</span>(<span class="params">obj, key, val, customSetter, shallow</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> dep = <span class="keyword">new</span> Dep()</div><div class="line"></div><div class="line">  <span class="keyword">const</span> property = <span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, key)</div><div class="line">  <span class="keyword">if</span> (property &amp;&amp; property.configurable === <span class="literal">false</span>) &#123;</div><div class="line">    <span class="keyword">return</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> getter = property &amp;&amp; property.get</div><div class="line">  <span class="keyword">const</span> setter = property &amp;&amp; property.set</div><div class="line"></div><div class="line">  <span class="keyword">if</span> ((!getter || setter) &amp;&amp; <span class="built_in">arguments</span>.length === <span class="number">2</span>) &#123;</div><div class="line">    val = obj[key]</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 递归观测，当然前提val不是基础类型，observe中已作判断</span></div><div class="line">  <span class="keyword">let</span> childOb = !shallow &amp;&amp; observe(val)</div><div class="line"></div><div class="line">  <span class="built_in">Object</span>.defineProperty(obj, key, &#123;</div><div class="line">    enumerable: <span class="literal">true</span>,</div><div class="line">    configurable: <span class="literal">true</span>,</div><div class="line">    get: <span class="function"><span class="keyword">function</span> <span class="title">reactiveGetter</span>(<span class="params"></span>) </span>&#123;</div><div class="line">      <span class="keyword">const</span> value = getter ? getter.call(obj) : val</div><div class="line">      <span class="built_in">console</span>.log(<span class="string">'getter:'</span>, value)</div><div class="line"></div><div class="line">      <span class="comment">/***********************依赖收集*************************/</span></div><div class="line">      <span class="keyword">if</span> (Dep.target) &#123;</div><div class="line">        dep.depend()</div><div class="line">      &#125;</div><div class="line">      <span class="comment">/***********************依赖收集*************************/</span></div><div class="line"></div><div class="line">      <span class="keyword">return</span> value</div><div class="line">    &#125;,</div><div class="line">    set: <span class="function"><span class="keyword">function</span> <span class="title">reactiveSetter</span>(<span class="params">newVal</span>) </span>&#123;</div><div class="line">      <span class="built_in">console</span>.log(<span class="string">'setter:'</span>, newVal)</div><div class="line">      <span class="keyword">const</span> value = getter ? getter.call(obj) : val</div><div class="line"></div><div class="line">      <span class="comment">// 新旧的值没有发生改变</span></div><div class="line">      <span class="keyword">if</span> (newVal === value || (newVal !== newVal &amp;&amp; value !== value)) &#123;</div><div class="line">        <span class="keyword">return</span></div><div class="line">      &#125;</div><div class="line"></div><div class="line">      <span class="keyword">if</span> (customSetter) &#123;</div><div class="line">        customSetter()</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      <span class="comment">// 用于没有setter的访问器属性</span></div><div class="line">      <span class="keyword">if</span> (getter &amp;&amp; !setter) <span class="keyword">return</span></div><div class="line"></div><div class="line">      <span class="keyword">if</span> (setter) &#123;</div><div class="line">        setter.call(obj, newVal)</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        val = newVal</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      <span class="comment">// 递归观测，当然前提val不是基础类型，observe中已作判断</span></div><div class="line">      childOb = !shallow &amp;&amp; observe(newVal)</div><div class="line"></div><div class="line">      <span class="comment">/***********************派发更新*************************/</span></div><div class="line">      dep.notify()</div><div class="line">      <span class="comment">/***********************派发更新*************************/</span></div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>defineReactive</code> 函数拿到数据对象 <code>obj</code> 的属性描述符，然后对子对象递归调用 <code>observe</code> 方法，这样就保证了无论 <code>obj</code> 的结构多复杂，它的所有子属性也能变成<strong>响应式的对象</strong>，这样我们访问或修改 <code>obj</code> 中一个嵌套较深的属性，也能触发 <strong>getter</strong> 和 <strong>setter</strong>。最后利用 <code>Object.defineProperty</code> 去给 <code>obj</code> 的属性 <code>key</code> 添加 <strong>getter</strong> 和 <strong>setter</strong>。而关于 <strong>getter</strong> 和 <strong>setter</strong> 的具体实现，我们会在之后介绍。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一节我们介绍了Vue会把数据对象 <code>data</code> 等变成响应式对象，在创建过程中，如果发现子属性也是对象，则将递归地把该对象变成响应式的。还介绍了响应式对象，核心就是利用 <code>Object.defineProperty</code> 给对象的属性添加了 <strong>getter</strong> 和 <strong>setter</strong>，目的就是为了在我们<strong>访问</strong>数据或者<strong>修改</strong>数据的时候能自动执行一些逻辑：<strong>getter</strong> 做的事情是依赖收集，<strong>setter</strong> 做的事情是派发更新，接下来的我们会重点对这两个过程分析。</p>
+<p><img src="/2020/02/17/Vue之深入响应式原理/reactive.png" alt="Alt text"></p>
+<h1 id="三、依赖收集"><a href="#三、依赖收集" class="headerlink" title="三、依赖收集"></a>三、依赖收集</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ul>
+<li>了解什么是依赖收集</li>
+<li>了解依赖收集的流程以及它的目的</li>
+</ul>
+<p>上面我们了解 Vue 会把普通对象变成响应式对象，响应式对象 <strong>getter</strong> 相关的逻辑就是做依赖收集，现在我们来详细分析这个过程。</p>
+<p>我们先来回顾一下 <strong>getter</strong> 部分的逻辑：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">defineReactive</span>(<span class="params">obj, key, val, customSetter, shallow</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> dep = <span class="keyword">new</span> Dep()</div><div class="line"></div><div class="line">  <span class="keyword">const</span> property = <span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, key)</div><div class="line">  <span class="keyword">if</span> (property &amp;&amp; property.configurable === <span class="literal">false</span>) &#123;</div><div class="line">    <span class="keyword">return</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> getter = property &amp;&amp; property.get</div><div class="line">  <span class="keyword">const</span> setter = property &amp;&amp; property.set</div><div class="line"></div><div class="line">  <span class="keyword">if</span> ((!getter || setter) &amp;&amp; <span class="built_in">arguments</span>.length === <span class="number">2</span>) &#123;</div><div class="line">    val = obj[key]</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 递归观测，当然前提val不是基础类型，observe中已作判断</span></div><div class="line">  <span class="keyword">let</span> childOb = !shallow &amp;&amp; observe(val)</div><div class="line"></div><div class="line">  <span class="built_in">Object</span>.defineProperty(obj, key, &#123;</div><div class="line">    enumerable: <span class="literal">true</span>,</div><div class="line">    configurable: <span class="literal">true</span>,</div><div class="line">    get: <span class="function"><span class="keyword">function</span> <span class="title">reactiveGetter</span>(<span class="params"></span>) </span>&#123;</div><div class="line">      <span class="keyword">const</span> value = getter ? getter.call(obj) : val</div><div class="line">      <span class="built_in">console</span>.log(<span class="string">'getter:'</span>, value)</div><div class="line"></div><div class="line">      <span class="comment">/***********************依赖收集*************************/</span></div><div class="line">      <span class="keyword">if</span> (Dep.target) &#123;</div><div class="line">        dep.depend()</div><div class="line">      &#125;</div><div class="line">      <span class="comment">/***********************依赖收集*************************/</span></div><div class="line"></div><div class="line">      <span class="keyword">return</span> value</div><div class="line">    &#125;,</div><div class="line">    <span class="comment">// ...</span></div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这段代码我们需要关注的是在 <code>get</code> 函数中通过 <code>dep.depend</code> 做依赖收集。</p>
+<h2 id="Dep"><a href="#Dep" class="headerlink" title="Dep"></a>Dep</h2><p><code>Dep</code> 是整个 <strong>getter</strong> 依赖收集的核心：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; remove, isObject &#125; <span class="keyword">from</span> <span class="string">'./util'</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> depId = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="comment">// 全局配置 TODO</span></div><div class="line"><span class="keyword">const</span> config = &#123;</div><div class="line">  <span class="keyword">async</span>: <span class="literal">true</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 一个dep是一个可观察的对象，可以有多个订阅它的指令。</span></div><div class="line"><span class="comment"> * 建立数据与watcher之间的桥梁</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">Dep</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>() &#123;</div><div class="line">    <span class="keyword">this</span>.id = depId++</div><div class="line">    <span class="keyword">this</span>.subs = []</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  addSub(sub) &#123;</div><div class="line">    <span class="keyword">this</span>.subs.push(sub)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  removeSub(sub) &#123;</div><div class="line">    remove(<span class="keyword">this</span>.subs, sub)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  depend() &#123;</div><div class="line">    <span class="keyword">if</span> (Dep.target) &#123;</div><div class="line">      Dep.target.addDep(<span class="keyword">this</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  notify() &#123;</div><div class="line">    <span class="comment">// 首先稳定订户列表</span></div><div class="line">    <span class="keyword">const</span> subs = <span class="keyword">this</span>.subs.slice()</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!config.async) &#123;</div><div class="line">      <span class="comment">/**</span></div><div class="line"><span class="comment">       * 如果是同步，则不会在调度进程中对subs进行排序，</span></div><div class="line"><span class="comment">       * 而是需要立即对其进行排序，以确保它们以正确的顺序触发</span></div><div class="line"><span class="comment">       */</span></div><div class="line">      subs.sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a.id - b.id)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">let</span> sub</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = subs.length; i &lt; l; i++) &#123;</div><div class="line">      sub = subs[i]</div><div class="line">      sub.update()</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 当前正在评估的目标观察者。</span></div><div class="line"><span class="comment"> * 这是全局唯一的，因为一次只有一个观察者可以评估</span></div><div class="line"><span class="comment"> */</span></div><div class="line">Dep.target = <span class="literal">null</span></div><div class="line"><span class="keyword">const</span> targetStack = []</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">pushTarget</span>(<span class="params">target</span>) </span>&#123;</div><div class="line">  targetStack.push(target)</div><div class="line">  Dep.target = target</div><div class="line"></div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'pushTarget =&gt; Dep.target:'</span>, target)</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'pushTarget =&gt; targetStack:'</span>, targetStack)</div><div class="line">&#125;</div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">popTarget</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'popTarget =&gt; Dep.target:'</span>, Dep.target)</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'popTarget =&gt; targetStack:'</span>, targetStack)</div><div class="line"></div><div class="line"></div><div class="line">  targetStack.pop()</div><div class="line">  Dep.target = targetStack[targetStack.length - <span class="number">1</span>]</div><div class="line"></div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'popTarget =&gt; Dep.target:'</span>, Dep.target)</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'popTarget =&gt; targetStack:'</span>, targetStack)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>Dep</code> 是一个 Class，它定义了一些属性和方法，这里需要特别注意的是它有一个静态属性 <code>target</code>，这是一个全局唯一 <code>Watcher</code>，这是一个非常巧妙的设计，因为在同一时间只能有一个全局的 <code>Watcher</code> 被计算，另外它的自身属性 <code>subs</code> 也是 <code>Watcher</code> 的数组。</p>
+<p><code>Dep</code> 实际上就是对 <code>Watcher</code> 的一种管理，<code>Dep</code>  脱离 <code>Watcher</code> 单独存在是没有意义的，为了完整地讲清楚依赖收集过程，我们有必要看一下 <code>Watcher</code> 的一些相关实现：</p>
+<h2 id="Watcher"><a href="#Watcher" class="headerlink" title="Watcher"></a>Watcher</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> watcherId = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">Watcher</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(vm, expOrFn, cb, options, isRenderWatcher) &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'================new Watcher================'</span>)</div><div class="line">    <span class="keyword">this</span>.id = ++watcherId</div><div class="line">    <span class="keyword">this</span>.active = <span class="literal">true</span></div><div class="line"></div><div class="line">    <span class="keyword">this</span>.vm = vm</div><div class="line">    <span class="keyword">this</span>.getter = expOrFn</div><div class="line">    <span class="keyword">this</span>.cb = cb</div><div class="line">    <span class="keyword">this</span>.expression = expOrFn.toString()</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (options) &#123;</div><div class="line">      <span class="keyword">this</span>.deep = !!options.deep</div><div class="line">      <span class="keyword">this</span>.user = !!options.user</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">this</span>.deep = <span class="keyword">this</span>.user = <span class="literal">false</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (isRenderWatcher) &#123;</div><div class="line">      vm._watcher = <span class="keyword">this</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    vm._watchers.push(<span class="keyword">this</span>)</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">this</span>.deps = []</div><div class="line">    <span class="keyword">this</span>.newDeps = []</div><div class="line">    <span class="keyword">this</span>.depIds = <span class="keyword">new</span> <span class="built_in">Set</span>()</div><div class="line">    <span class="keyword">this</span>.newDepIds = <span class="keyword">new</span> <span class="built_in">Set</span>()</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.value = <span class="keyword">this</span>.get()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line"><span class="comment">   * 评估getter，然后重新收集依赖关系。</span></div><div class="line"><span class="comment">   */</span></div><div class="line">  get() &#123;</div><div class="line">    pushTarget(<span class="keyword">this</span>)</div><div class="line"></div><div class="line">    <span class="keyword">let</span> value</div><div class="line">    <span class="keyword">const</span> vm = <span class="keyword">this</span>.vm</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      value = <span class="keyword">this</span>.getter.call(vm, vm)</div><div class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">      <span class="keyword">throw</span> e</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">      popTarget()</div><div class="line">      <span class="keyword">this</span>.cleanupDeps()</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> value</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line"><span class="comment">   * 向此指令添加依赖项。</span></div><div class="line"><span class="comment">   * @param dep </span></div><div class="line"><span class="comment">   */</span></div><div class="line">  addDep(dep) &#123;</div><div class="line">    <span class="keyword">const</span> id = dep.id</div><div class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>.newDepIds.has(id)) &#123;</div><div class="line">      <span class="keyword">this</span>.newDepIds.add(id)</div><div class="line">      <span class="keyword">this</span>.newDeps.push(dep)</div><div class="line">      <span class="keyword">if</span> (!<span class="keyword">this</span>.depIds.has(id)) &#123;</div><div class="line">        dep.addSub(<span class="keyword">this</span>)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line"><span class="comment">   * 清理依赖项集合。</span></div><div class="line"><span class="comment">   */</span></div><div class="line">  cleanupDeps() &#123;</div><div class="line">    <span class="keyword">let</span> i = <span class="keyword">this</span>.deps.length</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (i--) &#123;</div><div class="line">      <span class="keyword">const</span> dep = <span class="keyword">this</span>.deps[i]</div><div class="line"></div><div class="line">      <span class="keyword">if</span> (!<span class="keyword">this</span>.newDepIds.has(dep.id)) &#123;</div><div class="line">        dep.removeSub(<span class="keyword">this</span>)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">let</span> tmp = <span class="keyword">this</span>.depIds</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.depIds = <span class="keyword">this</span>.newDepIds</div><div class="line">    <span class="keyword">this</span>.newDepIds = tmp</div><div class="line">    <span class="keyword">this</span>.newDepIds.clear()</div><div class="line">    tmp = <span class="keyword">this</span>.deps</div><div class="line">    <span class="keyword">this</span>.deps = <span class="keyword">this</span>.newDeps</div><div class="line">    <span class="keyword">this</span>.newDeps = tmp</div><div class="line">    <span class="keyword">this</span>.newDeps.length = <span class="number">0</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line"><span class="comment">   * Subscriber 接口</span></div><div class="line"><span class="comment">   * 依赖项更改时将调用</span></div><div class="line"><span class="comment">   */</span></div><div class="line">  update() &#123;</div><div class="line">    queueWatcher(<span class="keyword">this</span>)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line"><span class="comment">   * 调度作业接口。 </span></div><div class="line"><span class="comment">   * 由调度程序调用。</span></div><div class="line"><span class="comment">   */</span></div><div class="line">  run() &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.active) &#123;</div><div class="line">      <span class="keyword">const</span> value = <span class="keyword">this</span>.get()</div><div class="line"></div><div class="line">      <span class="keyword">if</span> (</div><div class="line">        value !== <span class="keyword">this</span>.value ||</div><div class="line">        <span class="comment">/**</span></div><div class="line"><span class="comment">         * 即使值相同，深度观察者和对象/数组上的观察者也应触发，</span></div><div class="line"><span class="comment">         * 因为该值可能已突变。</span></div><div class="line"><span class="comment">         */</span></div><div class="line">        isObject(value) ||</div><div class="line">        <span class="keyword">this</span>.deep</div><div class="line">      ) &#123;</div><div class="line">        <span class="comment">// set new value</span></div><div class="line">        <span class="keyword">const</span> oldValue = <span class="keyword">this</span>.value</div><div class="line">        <span class="keyword">this</span>.value = value</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.user) &#123;</div><div class="line">          <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">this</span>.cb.call(<span class="keyword">this</span>.vm, value, oldValue)</div><div class="line">          &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">            <span class="comment">// TODO</span></div><div class="line">          &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          <span class="keyword">this</span>.cb.call(<span class="keyword">this</span>.vm, value, oldValue)</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>Watcher</code> 是一个 Class，在它的构造函数中，定义了一些和 <code>Dep</code> 相关的属性：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.deps = []</div><div class="line"><span class="keyword">this</span>.newDeps = []</div><div class="line"><span class="keyword">this</span>.depIds = <span class="keyword">new</span> <span class="built_in">Set</span>()</div><div class="line"><span class="keyword">this</span>.newDepIds = <span class="keyword">new</span> <span class="built_in">Set</span>()</div></pre></td></tr></table></figure>
+<p>其中，<code>this.deps</code> 和 <code>this.newDeps</code> 表示 <code>Watcher</code> 实例持有的 <code>Dep</code> 实例的数组；而 <code>this.depIds</code> 和 <code>this.newDepIds</code> 分别代表 <code>this.deps</code> 和 <code>this.newDeps</code> 的 <code>id</code> Set（这个 Set 是 ES6 的数据结构）。那么这里为何需要有 2 个 <code>Dep</code> 实例数组呢，稍后我们会解释。</p>
+<p><code>Watcher</code> 还定义了一些原型的方法，和依赖收集相关的有 <code>get</code>、<code>addDep</code> 和 <code>cleanupDeps</code> 方法，单个介绍它们的实现不方便理解，我会结合整个依赖收集的过程把这几个方法讲清楚。</p>
+<h2 id="过程分析"><a href="#过程分析" class="headerlink" title="过程分析"></a>过程分析</h2><p>之前我们介绍当对数据对象的<strong>访问</strong>会触发他们的 <strong>getter</strong> 方法，那么这些对象什么时候被访问呢？那就是 Vue 的 <code>$mount</code> 方法中，其中有一段比较重要的逻辑，大致如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> updateComponent = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  <span class="keyword">this</span>._update(<span class="keyword">this</span>._render())</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">new</span> Watcher(<span class="keyword">this</span>, updateComponent, () =&gt; &#123; &#125;, &#123;&#125;, <span class="literal">true</span>)<span class="comment">/* isRenderWatcher */</span></div></pre></td></tr></table></figure>
+<p>当我们去实例化一个<strong>渲染</strong> <code>watcher</code> 的时候，首先进入 <code>watcher</code> 的构造函数逻辑，然后会执行它的 <code>this.get()</code> 方法，进入 <code>get</code> 函数，首先会执行：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pushTarget(<span class="keyword">this</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">pushTarget</span>(<span class="params">target</span>) </span>&#123;</div><div class="line">  targetStack.push(target)</div><div class="line">  Dep.target = target</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实际上就是把 <code>Dep.target</code> 赋值为当前的<strong>渲染</strong> <code>watcher</code> 并压栈（为了恢复用）。接着又执行了：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">value = <span class="keyword">this</span>.getter.call(<span class="keyword">this</span>, <span class="keyword">this</span>)</div></pre></td></tr></table></figure>
+<p><code>this.getter</code> 对应就是 <code>updateComponent</code> 函数，这实际上就是在执行：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>._update(<span class="keyword">this</span>._render())</div></pre></td></tr></table></figure></p>
+<p>它会先执行 <code>this._render()</code> 方法，在这个过程中会对 <code>this.message</code> 数据的<strong>访问</strong>，这个时候就触发了数据对象的 <strong>getter</strong>。</p>
+<p>那么每个对象值的 getter 都持有一个 <code>dep</code>，在触发 <strong>getter</strong> 的时候会调用 <code>dep.depend()</code> 方法，也就会执行 <code>Dep.target.addDep(this)</code>。</p>
+<p><img src="/2020/02/17/Vue之深入响应式原理/reactive.png" alt="Alt text"></p>
+<p>刚才我们提到这个时候 <code>Dep.target</code> 已经被赋值为<strong>渲染</strong> <code>watcher</code>，那么就执行到 <code>addDep</code> 方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">addDep(dep) &#123;</div><div class="line">  <span class="keyword">const</span> id = dep.id</div><div class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>.newDepIds.has(id)) &#123;</div><div class="line">    <span class="keyword">this</span>.newDepIds.add(id)</div><div class="line">    <span class="keyword">this</span>.newDeps.push(dep)</div><div class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>.depIds.has(id)) &#123;</div><div class="line">      dep.addSub(<span class="keyword">this</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这时候会做一些逻辑判断（保证同一数据不会被添加多次）后执行 <code>dep.addSub(this)</code>，那么就会执行 <code>this.subs.push(sub)</code>，也就是说把当前的 <code>watcher</code> 订阅到这个数据持有的 <code>dep</code> 的 <code>subs</code> 中，这个目的是为后续数据变化时候能通知到哪些 <code>subs</code> 做准备。</p>
+<p>至此，<code>dep.depend()</code> 执行结束，<code>message</code>属性的依赖收集完毕，同时访问到 <code>message</code> 的值，于是完成初始渲染页面。</p>
+<p>若有多个属性需要依赖收集，则会有多个 <code>dep</code> 对应一个 <code>watcher</code>, 这里是多对一的关系。</p>
+<p>所以在 <code>vm._render()</code> 过程中，会触发所有数据的 <strong>getter</strong>，这样实际上已经完成了一个依赖收集的过程。那么到这里就结束了么，其实并没有，在完成依赖收集后，还有几个逻辑要执行，首先是是要递归去访问 <code>value</code>，触发它所有子项的 <code>getter</code>，这个之后会详细讲。接下来执行：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">popTarget()</div></pre></td></tr></table></figure>
+<p><code>popTarget</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">popTarget</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  targetStack.pop()</div><div class="line">  Dep.target = targetStack[targetStack.length - <span class="number">1</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实际上就是把 <code>Dep.target</code> 恢复成上一个状态，因为当前 vm 的数据依赖收集已经完成，那么对应的渲染<code>Dep.target</code> 也需要改变。最后执行：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.cleanupDeps()</div></pre></td></tr></table></figure>
+<p>其实很多人都分析过并了解到 Vue 有依赖收集的过程，但我几乎没有看到有人分析依赖清空的过程，其实这是大部分同学会忽视的一点，也是 Vue 考虑特别细的一点。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 清理依赖项集合。</span></div><div class="line"><span class="comment"> */</span></div><div class="line">cleanupDeps() &#123;</div><div class="line">  <span class="keyword">let</span> i = <span class="keyword">this</span>.deps.length</div><div class="line"></div><div class="line">  <span class="keyword">while</span> (i--) &#123;</div><div class="line">    <span class="keyword">const</span> dep = <span class="keyword">this</span>.deps[i]</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>.newDepIds.has(dep.id)) &#123;</div><div class="line">      dep.removeSub(<span class="keyword">this</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">let</span> tmp = <span class="keyword">this</span>.depIds</div><div class="line"></div><div class="line">  <span class="keyword">this</span>.depIds = <span class="keyword">this</span>.newDepIds</div><div class="line">  <span class="keyword">this</span>.newDepIds = tmp</div><div class="line">  <span class="keyword">this</span>.newDepIds.clear()</div><div class="line">  tmp = <span class="keyword">this</span>.deps</div><div class="line">  <span class="keyword">this</span>.deps = <span class="keyword">this</span>.newDeps</div><div class="line">  <span class="keyword">this</span>.newDeps = tmp</div><div class="line">  <span class="keyword">this</span>.newDeps.length = <span class="number">0</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>考虑到 Vue 是数据驱动的，所以每次数据变化都会重新 render，那么 <code>this._render()</code> 方法又会再次执行，并<strong>再次触发</strong>数据的 <strong>getters</strong>，所以 <code>Wathcer</code> 在构造函数中会初始化 2 个 <code>Dep</code> 实例数组，<code>newDeps</code> 表示新添加的 <code>Dep</code> 实例数组，而 <code>deps</code> 表示上一次添加的 <code>Dep</code> 实例数组。</p>
+<p>在执行 <code>cleanupDeps</code> 函数的时候，会首先遍历 <code>deps</code>，若其中没有新增依赖收集中的 <code>dep</code>, 则移除对 <code>dep.subs</code> 数组中 <code>Wathcer</code> 的订阅，然后把 <code>newDepIds</code> 和 <code>depIds</code> 交换，<code>newDeps</code> 和 <code>deps</code> 交换，并把 <code>newDepIds</code> 和 <code>newDeps</code> 清空。</p>
+<p>那么为什么需要做 <code>deps</code> 订阅的移除呢，在添加 <code>deps</code> 的订阅过程，已经能通过 <code>id</code> 去重避免重复订阅了。</p>
+<p>考虑到一种场景，我们的模板会根据 <code>v-if</code> 去渲染不同子模板 a 和 b，当我们满足某种条件的时候渲染 a 的时候，会访问到 a 中的数据，这时候我们对 a 使用的数据添加了 <strong>getter</strong>，做了依赖收集，那么当我们去修改 a 的数据的时候，理应通知到这些订阅者。那么如果我们一旦改变了条件渲染了 b 模板，又会对 b 使用的数据添加了 <strong>getter</strong>，如果我们没有依赖移除的过程，那么这时候我去修改 a 模板的数据，会通知 a 数据的订阅的回调，这显然是有浪费的。</p>
+<p><strong>因此 Vue 设计了在每次添加完新的订阅，会移除掉旧的订阅</strong>，这样就保证了在我们刚才的场景中，如果渲染 b 模板的时候去修改 a 模板的数据，a 数据订阅回调已经被移除了，所以不会有任何浪费，真的是非常赞叹 Vue 对一些细节上的处理。</p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>通过这一节的分析，我们对 Vue 数据的依赖收集过程已经有了认识，并且对这其中的一些细节做了分析。收集依赖的目的是为了当这些响应式数据发生变化，触发它们的 <strong>setter</strong> 的时候，能知道应该通知哪些订阅者去做相应的逻辑处理，我们把这个过程叫派发更新，其实 <code>Watcher</code> 和 <code>Dep</code> 就是一个非常经典的观察者设计模式的实现，下一节我们来详细分析一下派发更新的过程。</p>
+
+          
+        
+      
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/15/axios之合并配置/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2255,291 +2505,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/14/Angular入门之路由/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengChe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="风车's Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/14/Angular入门之路由/" itemprop="url">Angular入门之路由</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-14T10:06:47+08:00">
-                2018-10-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Angular/" itemprop="url" rel="index">
-                    <span itemprop="name">Angular</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/14/Angular入门之路由/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/14/Angular入门之路由/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="Angular路由的基础知识"><a href="#Angular路由的基础知识" class="headerlink" title="Angular路由的基础知识"></a><code>Angular</code>路由的基础知识</h3><ul>
-<li>路由内容<ul>
-<li>基本用法</li>
-<li>子路由、保护路由和辅助路由</li>
-</ul>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">名称</th>
-<th style="text-align:center">简介</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center"><code>Routes</code></td>
-<td style="text-align:center"><code>路由配置</code>，保存着哪个<code>URL</code>对应展示哪个组件，以及在哪个<code>RouteOutlet</code>中展示组件</td>
-</tr>
-<tr>
-<td style="text-align:center"><code>RouterOutlet</code></td>
-<td style="text-align:center">在<code>html</code>中标记路由内容呈现位置的<code>占位符指令</code></td>
-</tr>
-<tr>
-<td style="text-align:center"><code>Router</code></td>
-<td style="text-align:center">负责在运行时执行路由的对象，可以通过调用其<code>navigate()</code>和<code>navigateByUrl()</code>方法来导航到一个指定的路由</td>
-</tr>
-<tr>
-<td style="text-align:center"><code>RouterLink</code></td>
-<td style="text-align:center">在<code>html</code>中声明路由导航用的指令</td>
-</tr>
-<tr>
-<td style="text-align:center"><code>ActivatedRoute</code></td>
-<td style="text-align:center">当前激活的路由对象，保存着当前路由的信息，如路由<code>地址</code>，<code>路由参数</code>等</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><p>路由信息的配置文件（<code>app-routing.module.ts</code>）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; NgModule &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</div><div class="line"><span class="keyword">import</span> &#123; RouterModule, Routes &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</div><div class="line"><span class="keyword">import</span> &#123; HomeComponent &#125; <span class="keyword">from</span> <span class="string">'./home/home.component'</span>;</div><div class="line"><span class="keyword">import</span> &#123; DetailComponent &#125; <span class="keyword">from</span> <span class="string">'./detail/detail.component'</span>;</div><div class="line"><span class="keyword">import</span> &#123; Code404Component &#125; <span class="keyword">from</span> <span class="string">'./code404/code404.component'</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> routes: Routes = [&#123;</div><div class="line">    path: <span class="string">''</span>, <span class="attr">component</span>: HomeComponent,<span class="comment">// path 不要用'/'开头</span></div><div class="line">    path: <span class="string">'detail'</span>, <span class="attr">component</span>: DetailComponent,</div><div class="line">    path: <span class="string">'**'</span>, <span class="attr">component</span>: Code404Component,<span class="comment">// 404页面路由</span></div><div class="line">&#125;];</div><div class="line"></div><div class="line">@NgModule(&#123;</div><div class="line">    imports: [RouterModule.forRoot(routes)],</div><div class="line">    exports: [RouterModule]</div><div class="line">&#125;)</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AppRoutingModule</span> </span>&#123; &#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>模板（<code>app-component.html</code>）</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/']"</span>&gt;</span>主页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail']"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">value</span>=<span class="string">"详情页"</span> (<span class="attr">click</span>)=<span class="string">"toDetail()"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">router-outlet</span>&gt;</span><span class="tag">&lt;/<span class="name">router-outlet</span>&gt;</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>使用 <code>Router</code> 在组件中进行路由导航（<code>app.component.ts</code>）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; Component &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</div><div class="line"><span class="keyword">import</span> &#123; Router &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</div><div class="line"></div><div class="line">@Component(&#123;</div><div class="line">    selector: <span class="string">'app-root'</span>,</div><div class="line">    templateUrl: <span class="string">'./app.component.html'</span>,</div><div class="line">    styleUrls: [<span class="string">'./app.component.css'</span>]</div><div class="line">&#125;)</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">AppComponent</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>(private router: Router) &#123; &#125;</div><div class="line"></div><div class="line">    toDetail() &#123;</div><div class="line">        <span class="keyword">this</span>.router.navigate([<span class="string">'/detail'</span>]);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="Angular在路由时传递数据"><a href="#Angular在路由时传递数据" class="headerlink" title="Angular在路由时传递数据"></a><code>Angular</code>在路由时传递数据</h3><ul>
-<li><p>在查询参数中传递数据</p>
-  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 通过 ? 传递 queryParams --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail?id=1&amp;name=2']"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"><span class="comment">&lt;!-- 或者 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail']"</span> [<span class="attr">queryParams</span>]=<span class="string">"&#123;id:1,name:2&#125;"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div></pre></td></tr></table></figure>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在路由的目标组件中，通过以下方式获取</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</div><div class="line">    private id: number;</div><div class="line">    <span class="keyword">constructor</span>(private routeInfo: ActivatedRoute) &#123; &#125;</div><div class="line">    ngOnInit() &#123;</div><div class="line">        <span class="comment">// 快捷获取：snapshot方式（参数快照），即组件初始化时，id只赋值一次</span></div><div class="line">        <span class="keyword">this</span>.id = <span class="keyword">this</span>.routeInfo.snapshot.queryParams[<span class="string">'id'</span>];</div><div class="line"></div><div class="line">        <span class="comment">// 或者对参数进行订阅，在同一个组件中（DetailComponent）中切换参数时就得用订阅的方式</span></div><div class="line">        <span class="keyword">this</span>.routeInfo.queryParams.subscribe(<span class="function">(<span class="params">queryParams: QueryParams</span>) =&gt;</span> &#123;</div><div class="line">            <span class="keyword">this</span>.id = queryParams[<span class="string">'id'</span>];</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>在路由路径中传递数据</p>
-  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"['/detail', 1]"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div></pre></td></tr></table></figure>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// routes</span></div><div class="line">&#123; <span class="attr">path</span>: <span class="string">'detail/:id'</span> &#125; <span class="comment">// /detail/1</span></div></pre></td></tr></table></figure>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在路由的目标组件中，通过以下方式获取</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</div><div class="line">    private id: number;</div><div class="line">    <span class="keyword">constructor</span>(private routeInfo: ActivatedRoute) &#123; &#125;</div><div class="line">    ngOnInit() &#123;</div><div class="line">        <span class="comment">// 快捷获取：snapshot方式（参数快照），即组件初始化时，id只赋值一次</span></div><div class="line">        <span class="keyword">this</span>.id = <span class="keyword">this</span>.routeInfo.snapshot.params[<span class="string">'id'</span>];</div><div class="line"></div><div class="line">        <span class="comment">// 或者对参数进行订阅，在同一个组件中（DetailComponent）中切换参数时就得用订阅的方式</span></div><div class="line">        <span class="keyword">this</span>.routeInfo.params.subscribe(<span class="function">(<span class="params">params: Params</span>) =&gt;</span> &#123;</div><div class="line">            <span class="keyword">this</span>.id = params[<span class="string">'id'</span>];</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>在路由配置中传递数据</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// routes</span></div><div class="line">&#123; <span class="attr">path</span>: <span class="string">'detail'</span>, <span class="attr">component</span>: DetailComponent, <span class="attr">data</span>: [&#123; <span class="attr">isProd</span>: <span class="literal">true</span> &#125;] &#125; </div><div class="line"><span class="comment">// data 属性本身是一个数组，在数组中可以定义任意个对象，isProd: 是否是生产环境</span></div></pre></td></tr></table></figure>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在路由的目标组件中，通过data的下标和属性名方式获取</span></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</div><div class="line">    private isProd: boolean;</div><div class="line">    <span class="keyword">constructor</span>(private routeInfo: ActivatedRoute) &#123; &#125;</div><div class="line">    ngOnInit() &#123;</div><div class="line">        <span class="keyword">this</span>.isProd = <span class="keyword">this</span>.routeInfo.snapshot.data[<span class="number">0</span>][<span class="string">'isProd'</span>];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="Angular重定向路由"><a href="#Angular重定向路由" class="headerlink" title="Angular重定向路由"></a><code>Angular</code>重定向路由</h3><ul>
-<li>在用户访问一个特定的地址时，将其重定向到另一个指定的地址。</li>
-<li>即：我们想通过<code>localhost:4200</code>来重定向到<code>localhost:4200/home</code><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> routes: Routes = [&#123;</div><div class="line">    path: <span class="string">''</span>, <span class="attr">redirectTo</span>: <span class="string">'/home'</span>, <span class="attr">pathMatch</span>: <span class="string">'full'</span>,<span class="comment">// pathMatch: 'full' || 'prefix', 精准匹配 || 前缀匹配</span></div><div class="line">    path: <span class="string">'home'</span>, <span class="attr">component</span>: HomeComponent,</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="Angular子路由"><a href="#Angular子路由" class="headerlink" title="Angular子路由"></a><code>Angular</code>子路由</h3><ul>
-<li><code>略</code><ul>
-<li><code>&#39;./&#39;</code></li>
-<li><code>children</code></li>
-</ul>
-</li>
-</ul>
-<h3 id="Angular辅助路由"><a href="#Angular辅助路由" class="headerlink" title="Angular辅助路由"></a><code>Angular</code>辅助路由</h3><ul>
-<li>需要声明路由插座的<code>名称</code></li>
-<li><p><code>primary</code>为主路由，<code>aux</code>为辅助路由</p>
-  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"[&#123;outlets: &#123;primary: 'home', aux: 'consult'&#125;&#125;]"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">a</span> [<span class="attr">routerLink</span>]=<span class="string">"[&#123;outlets: &#123;aux: null&#125;&#125;]"</span>&gt;</span>详情页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">router-outlet</span> <span class="attr">name</span>=<span class="string">"aux"</span>&gt;</span><span class="tag">&lt;/<span class="name">router-outlet</span>&gt;</span></div></pre></td></tr></table></figure>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// routes 规定这个组件只能在名为“aux”的路由插座中显示</span></div><div class="line">&#123; <span class="attr">path</span>: <span class="string">'consult'</span>, <span class="attr">component</span>: ConsultComponent, <span class="attr">outlet</span>: <span class="string">'aux'</span> &#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="Angular路由守卫"><a href="#Angular路由守卫" class="headerlink" title="Angular路由守卫"></a><code>Angular</code>路由守卫</h3><ul>
-<li><code>CanActivate</code>：处理导航到某路由的情况。</li>
-<li><code>CanDeactivate</code>：处理从当前路由离开的情况。</li>
-<li><code>Resolve</code>：在路由激活之前获取路由数据。</li>
-</ul>
-<ul>
-<li><p><code>CanActivate</code></p>
-<ul>
-<li><p><code>PermissionGuard</code>组件（<code>permission.guard.ts</code>）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; CanActivate &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">PermissionGuard</span> <span class="title">implement</span> <span class="title">CanActivate</span> </span>&#123;</div><div class="line">    canActivate() &#123;<span class="comment">// 该方法需要返回一个布尔值</span></div><div class="line">        <span class="keyword">var</span> hasPermission: boolean = <span class="built_in">Math</span>.random() &lt; <span class="number">0.5</span>;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (!hasPermission) &#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="string">'用户无权访问此页面'</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> hasPermission;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>路由信息的配置文件（<code>app-routing.module.ts</code>）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> routes: Routes = [&#123;</div><div class="line">    <span class="comment">// 不过需要有人帮我们实例化这个PermissionGuard组件</span></div><div class="line">    path: <span class="string">'detail'</span>, <span class="attr">component</span>: DetailComponent, <span class="attr">canActivate</span>: [PermissionGuard]</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
-</li>
-<li><p><code>Angular</code>主模块（<code>app.module.ts</code>）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@NgModule(&#123;</div><div class="line">    ...,</div><div class="line">    providers: [PermissionGuard],<span class="comment">// 实例化组件</span></div><div class="line">    ...</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p><code>CanDeactivate</code></p>
-<ul>
-<li><code>FocusGuard</code>组件（<code>focus.guard.ts</code>）<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; CanDeactivate &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">FocusGuard</span> <span class="title">implement</span> <span class="title">CanDeactivate</span>&lt;<span class="title">DetailComponent</span>&gt; </span>&#123;</div><div class="line">    <span class="comment">// 不同的是这里会注入当前的组件，获取组件的状态，然后判断离开时需要做的事情</span></div><div class="line">    canDeactivate(component: DetailComponent) &#123;<span class="comment">// 该方法需要返回一个布尔值</span></div><div class="line">        <span class="keyword">if</span> (component.isFocus()) &#123;<span class="comment">// DetailComponent的某个方法</span></div><div class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="built_in">window</span>.confirm(<span class="string">"不关注就离开吗？"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p><code>Resolve</code> 有时候我们会先异步去请求后端服务的数据，等响应之后再将数据绑定到页面上，则需要用到该功能；不然页面可能会报错，找不到某某对象的属性，如：<code>Detail</code>的<code>id</code>和<code>name</code>。</p>
-<ul>
-<li><p><code>DetailResolve</code>组件（<code>detail.resolve.ts</code>）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; Router, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot &#125; <span class="keyword">from</span> <span class="string">'@angular/router'</span>;</div><div class="line"><span class="keyword">import</span> &#123; Detail &#125; <span class="keyword">from</span> <span class="string">'../detail/detail.component'</span>;</div><div class="line"><span class="keyword">import</span> &#123; Observable &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;</div><div class="line"><span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">'@angular/core'</span>;</div><div class="line"></div><div class="line">@Injectable()</div><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailResolve</span> <span class="title">implement</span> <span class="title">Resolve</span>&lt;<span class="title">Detail</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">constructor</span>(private router: Router) &#123; &#125;</div><div class="line"></div><div class="line">    resolve(route: ActivatedRouteSnapshot, <span class="attr">state</span>: RouterStateSnapshot): Detail | Observable&lt;Detail&gt; | <span class="built_in">Promise</span>&lt;Detail&gt; &#123;</div><div class="line">        <span class="comment">// ActivatedRouteSnapshot相当于上文的 this.routeInfo.snapshot</span></div><div class="line"></div><div class="line">        <span class="keyword">let</span> id = route.params[<span class="string">'id'</span>];</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (id == <span class="number">1</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Detail(<span class="number">1</span>, <span class="string">'Angular'</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">this</span>.router.navigate([<span class="string">'/home'</span>]);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>路由信息的配置文件（<code>app-routing.module.ts</code>）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> routes: Routes = [&#123;</div><div class="line">    <span class="comment">// 需要在`@NgModule`的`providers`中实例化这个DetailResolve组件</span></div><div class="line">    path: <span class="string">'detail'</span>, <span class="attr">component</span>: DetailComponent, <span class="attr">resolve</span>: &#123;</div><div class="line">        detail: DetailResolve</div><div class="line">    &#125;</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
-</li>
-<li><p><code>DetailComponent</code> (<code>detail.component.ts</code>）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailComponent</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</div><div class="line">    private detail: Detail;</div><div class="line">    <span class="keyword">constructor</span>(private routeInfo: ActivatedRoute) &#123; &#125;</div><div class="line">    ngOnInit() &#123;</div><div class="line">        <span class="keyword">this</span>.routeInfo.data.subscribe(<span class="function">(<span class="params">data: &#123;detail: Detail&#125;</span>) =&gt;</span> &#123;</div><div class="line">            <span class="keyword">this</span>.detail = data.detail;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="Angular路由的实战"><a href="#Angular路由的实战" class="headerlink" title="Angular路由的实战"></a><code>Angular</code>路由的实战</h3><ul>
-<li>可一看</li>
-</ul>
-
-          
-        
-      
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2585,7 +2555,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2607,7 +2577,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
