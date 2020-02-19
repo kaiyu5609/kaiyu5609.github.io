@@ -212,12 +212,12 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 0;
   padding: 0;
   font-weight: bold;
   line-height: 1.5;
   font-family: 'Roboto Slab', 'Monda', "PingFang SC", "Microsoft YaHei", sans-serif;
 }
+h1,
 h2,
 h3,
 h4,
@@ -1259,6 +1259,7 @@ pre .javascript .function {
     text-align: justify;
   }
 }
+.posts-expand .post-body h1,
 .posts-expand .post-body h2,
 .posts-expand .post-body h3,
 .posts-expand .post-body h4,
@@ -1266,6 +1267,7 @@ pre .javascript .function {
 .posts-expand .post-body h6 {
   padding-top: 10px;
 }
+.posts-expand .post-body h1 .header-anchor,
 .posts-expand .post-body h2 .header-anchor,
 .posts-expand .post-body h3 .header-anchor,
 .posts-expand .post-body h4 .header-anchor,
@@ -1277,6 +1279,7 @@ pre .javascript .function {
   border-bottom-style: none;
   visibility: hidden;
 }
+.posts-expand .post-body h1 .header-anchor:hover,
 .posts-expand .post-body h2 .header-anchor:hover,
 .posts-expand .post-body h3 .header-anchor:hover,
 .posts-expand .post-body h4 .header-anchor:hover,
@@ -1284,6 +1287,7 @@ pre .javascript .function {
 .posts-expand .post-body h6 .header-anchor:hover {
   color: inherit;
 }
+.posts-expand .post-body h1:hover .header-anchor,
 .posts-expand .post-body h2:hover .header-anchor,
 .posts-expand .post-body h3:hover .header-anchor,
 .posts-expand .post-body h4:hover .header-anchor,
@@ -1808,7 +1812,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #d12dff;
+  background: #5312ff;
 }
 .links-of-blogroll {
   font-size: 13px;
