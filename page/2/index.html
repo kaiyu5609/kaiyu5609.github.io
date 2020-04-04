@@ -325,208 +325,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/20/Angular入门之依赖注入/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengChe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="风车's Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/20/Angular入门之依赖注入/" itemprop="url">Angular入门之依赖注入</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-20T11:34:22+08:00">
-                2018-10-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Angular/" itemprop="url" rel="index">
-                    <span itemprop="name">Angular</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/20/Angular入门之依赖注入/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/20/Angular入门之依赖注入/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="Angular依赖注入"><a href="#Angular依赖注入" class="headerlink" title="Angular依赖注入"></a><code>Angular</code>依赖注入</h3><ul>
-<li><p><code>依赖注入</code>内容</p>
-<ul>
-<li>什么是<code>依赖注入模式</code>及使用<code>依赖注入</code>的好处</li>
-<li>介绍<code>Angular</code>的<code>依赖注入实现</code>：注入器和提供器</li>
-<li>注入器的层级关系</li>
-</ul>
-</li>
-<li><p><code>依赖注入</code></p>
-<ul>
-<li><code>依赖注入</code>：<code>Dependency Injection</code>，简称<code>DI</code><ul>
-<li>一个对象<code>a:A</code>需要依赖另外一个类型为<code>B</code>的对象<code>b</code>，那么对象<code>a</code>不需要明确地实例化对象<code>b</code>，<code>b</code>会由外部机制注入进来，对象<code>a</code>只要声明我需要<code>B</code>类型的对象，有人能给我一个么，这就是<code>依赖注入</code>需要解决的问题</li>
-<li>与<code>依赖注入</code>经常同时出现的另一个概念叫做<code>控制反转</code></li>
-</ul>
-</li>
-<li><p><code>控制反转</code>：<code>Inversion of Control</code>，简称<code>IOC</code></p>
-<ul>
-<li><code>控制反转</code>是指将依赖的控制权从代码的内部转到代码的外部</li>
-</ul>
-</li>
-<li><p>假如我们这样编写代码</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> product = <span class="keyword">new</span> Product();<span class="comment">// 这句话，决定我们的代码需要依赖Product类</span></div><div class="line">createShipment(product);</div><div class="line"></div><div class="line"><span class="comment">// 如果有一天我们需要依赖的不是Product了，而是AnotherProduct；那么我们需要修改代码的内部，变成如下：</span></div><div class="line"><span class="keyword">var</span> product = <span class="keyword">new</span> AnotherProduct();</div><div class="line">createShipment(product);</div></pre></td></tr></table></figure>
-</li>
-<li><p>而如果实现了<code>控制反转</code>，则内部代码只需要声明我需要<code>product</code>，至于传进来的是<code>Product</code>，还是<code>AnotherProduct</code>，是由代码的外部决定的，这时代码的控制权由代码的内部转到了外部</p>
-</li>
-<li><code>依赖注入</code>和<code>控制反转</code>表达的是一个思想，<code>控制反转</code>侧重于描述目的，目的是将依赖的控制权从代码的内容转到代码的外部；而<code>依赖注入</code>侧重于描述手段，就是如何来实现<code>控制反转</code>，使用的手段叫<code>依赖注入</code></li>
-<li>实现了<code>控制反转</code>的框架被称为<code>IOC容器</code>，<code>Angular</code>框架就是一个<code>IOC容器</code>，<code>Angular</code>实现<code>控制反转</code>的手段就是<code>依赖注入</code></li>
-</ul>
-</li>
-<li><p><code>依赖注入</code>的好处</p>
-<ul>
-<li>松耦合（消除组件跟服务的<code>紧耦合关系</code>，通过<code>依赖注入</code>可以让组件依赖不同的服务，并且任意更换，这使得组件可以<code>高度复用</code>）</li>
-<li>提高可测试性（假如项目的开发是<code>前后端分离</code>，前端不需要依赖后端服务的开发，可以先直接<code>Mock</code>一个服务来调试，等后端服务真正做好后，再进行联调，使服务可以随意切换）</li>
-</ul>
-</li>
-<li><p>注入器和提供器</p>
-<ul>
-<li><p>注入器</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">constructor</span>(private productService: ProductService) &#123; &#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>提供器</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 简写</span></div><div class="line">providers: [ProductService]</div><div class="line"><span class="comment">// 或者</span></div><div class="line">providers: [&#123; <span class="attr">provide</span>: ProductService, <span class="attr">useClass</span>: ProductService &#125;]</div><div class="line"><span class="comment">// 或者 通过工厂方法</span></div><div class="line">providers: [&#123; <span class="attr">provide</span>: ProductService, <span class="attr">useFactory</span>: <span class="function"><span class="params">()</span> =&gt;</span> &#123; &#125; &#125;]</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/14/Angular入门之路由/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2283,6 +2081,467 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/22/MySQL入门之初识数据库操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengChe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风车's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/22/MySQL入门之初识数据库操作/" itemprop="url">MySQL入门之初识数据库操作</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-22T20:49:01+08:00">
+                2018-05-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/22/MySQL入门之初识数据库操作/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/22/MySQL入门之初识数据库操作/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、MySQL基础之数据类型与表的管理"><a href="#一、MySQL基础之数据类型与表的管理" class="headerlink" title="一、MySQL基础之数据类型与表的管理"></a>一、MySQL基础之数据类型与表的管理</h3><ol>
+<li><p>什么是数据库？</p>
+<ul>
+<li><p>数据库 <code>Database</code> 是按照数据结构来组织、存储和管理数据的仓库</p>
+</li>
+<li><p>常见的数据库</p>
+<ul>
+<li><code>Oracle</code></li>
+<li><code>DB2</code></li>
+<li><code>SQL Server</code></li>
+<li><code>Postgre SQL</code></li>
+<li><code>MySQL</code></li>
+</ul>
+</li>
+<li><p>相关术语</p>
+<ul>
+<li>数据库系统：<code>DBS</code>（Database System）</li>
+<li>包括数据库：<code>DB</code>（Database）</li>
+<li>数据库管理系统：<code>DBMS</code>（Database Management System）</li>
+<li>应用开发工具</li>
+<li>管理员及用户</li>
+<li>SQL语言：<code>Structured Query Language</code></li>
+<li>结构化查询语言，包括<ul>
+<li>数据定义语言：<code>DDL</code></li>
+<li>数据操作语言：<code>DML</code></li>
+<li>数据查询语言：<code>DQL</code></li>
+<li>数据控制语言：<code>DCL</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>MySQL相关操作</p>
+<ul>
+<li><p>登录/退出MySQL</p>
+<ul>
+<li><p>配置文件<br>  <code>my.cnf</code>是MySQL的配置文件</p>
+</li>
+<li><p>登录MySQL<br>  <code>mysql -uroot -p</code><br>  <code>mysql -uroot -proot</code>（密码为root）</p>
+</li>
+<li><p>查看MySQL版本<br>  <code>mysql -V</code><br>  <code>mysql --version</code></p>
+</li>
+<li><p>登录的同时打开指定数据库<br>  <code>mysql -uroot -p -D db_name</code></p>
+</li>
+<li><p>退出MySQL<br>  <code>exit</code><br>  <code>quit</code></p>
+</li>
+<li><p>登录信息中需要掌握的<br>  命令行结束符默认使用<code>;</code>或者<code>\g</code>来结束<br>  可以通过<code>help</code>或者<code>\h</code>或者<code>?</code>加上相关关键字来查看手册<br>  <code>\c</code>可以取消当前命令的执行</p>
+</li>
+</ul>
+</li>
+<li><p>SQL语句语法规范</p>
+<ul>
+<li>常用<code>MySQL的关键字</code>我们需要<code>大写</code>，<code>库名</code>、<code>表名</code>、<code>字段名</code>称等使用<code>小写</code></li>
+<li>SQL语句支持折行操作，拆分的时候不能把完整单词拆开</li>
+<li><code>数据库名称</code>、<code>表名称</code>、<code>字段名称</code>不要使用MySQL的保留字，如果必须要使用，需要用反引号``将其括起来</li>
+</ul>
+</li>
+<li><p>常用SQL语句</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 1.获取登录的用户</span></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">USER</span>();</div><div class="line"></div><div class="line"><span class="comment">-- 2.获取MySQL的版本信息</span></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">VERSION</span>();</div><div class="line"></div><div class="line"><span class="comment">-- 3.获取当前的日期时间</span></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">NOW</span>();</div><div class="line"></div><div class="line"><span class="comment">-- 4.获取当前打开的数据库</span></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">DATABASE</span>();</div><div class="line"></div><div class="line"><span class="comment">-- 5.查看上一步操作产生的警告信息</span></div><div class="line"><span class="keyword">SHOW</span> <span class="keyword">WARNINGS</span>;</div><div class="line"></div><div class="line"><span class="comment">-- 6.MySQL的注释：`#`或者`--`</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>数据库相关操作</p>
+<ul>
+<li><p>创建数据库</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 1.</span></div><div class="line"><span class="keyword">CREATE</span> &#123;<span class="keyword">DATABASE</span>|<span class="keyword">SCHEMA</span>&#125; db_name;</div><div class="line"></div><div class="line"><span class="comment">-- 2.检测数据库名称是否存在，不存在则创建</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] db_name;</div><div class="line"></div><div class="line"><span class="comment">-- 3.在创建数据库的同时指定编码方式</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] db_name [<span class="keyword">DEFAULT</span>] <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> [=] <span class="keyword">charset</span>;</div><div class="line"></div><div class="line"><span class="comment">-- 4.注意：数据库名称最好有意义；名称不能包含特殊字符或者是MySQL关键字</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>查看当前服务器下全部数据库</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SHOW</span> <span class="keyword">DATABASES</span>|SCHEMAS;</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看指定数据库的详细信息</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SHOW</span> DREATE <span class="keyword">DATABASE</span> db_name;</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改指定数据库的编码方式</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">DATABASE</span> db_name [<span class="keyword">DEFAULT</span>] <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> [=] <span class="keyword">charset</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>打开指定数据库</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">USE</span> db_name;</div></pre></td></tr></table></figure>
+</li>
+<li><p>获取当前打开的数据库</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">DATABASE</span>();</div><div class="line"></div><div class="line"><span class="comment">-- 或者</span></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">SCHEMA</span>();</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除指定数据库</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">DROP</span> <span class="keyword">DATABASE</span> db_name;</div><div class="line"></div><div class="line"><span class="comment">-- 删除存在的数据库</span></div><div class="line"><span class="keyword">DROP</span> <span class="keyword">DATABASE</span> [<span class="keyword">IF</span> <span class="keyword">EXISTS</span>] db_name;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>数据表相关操作</p>
+<ul>
+<li><p>数据表</p>
+<ul>
+<li>是数据库最重要的组成部分之一，数据是保存在数据表中</li>
+<li>数据表由行<code>row</code>和列<code>column</code>来组成</li>
+<li>每个数据表中至少有一列，行可以有零行一行或者多行组成</li>
+<li>表名要求<code>唯一</code>，不要包含特殊字符，最好含义明确</li>
+</ul>
+</li>
+<li><p>创建数据表</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] tbl_name (</div><div class="line">    字段名称 字段类型 [完整性约束条件],</div><div class="line">    字段名称 字段类型 [完整性约束条件], </div><div class="line">    ...</div><div class="line">) <span class="keyword">ENGINE</span>=存储引擎 <span class="keyword">CHARSET</span>=编码方式;</div></pre></td></tr></table></figure>
+</li>
+<li><p>完整性约束条件<br>  <img src="/2018/05/22/MySQL入门之初识数据库操作/constraint.png" alt="Alt text"></p>
+</li>
+<li><p>查看当前数据库下已有数据表</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</div><div class="line"></div><div class="line"><span class="comment">-- 或者</span></div><div class="line"><span class="keyword">SHOW</span> [<span class="keyword">FULL</span>] <span class="keyword">TABLES</span> [&#123; <span class="keyword">FROM</span> | <span class="keyword">IN</span> &#125; db_name] [<span class="keyword">LIKE</span> <span class="string">'pattern'</span> | <span class="keyword">WHERE</span> expr];</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看指定数据表的详细信息</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> tbl_name;</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看表结构</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">DESC tbl_name;</div><div class="line"></div><div class="line"><span class="keyword">DESCRIBE</span> tbl_name;</div><div class="line"></div><div class="line"><span class="keyword">SHOW</span> <span class="keyword">COLUMNS</span> <span class="keyword">FROM</span> tbl_name;</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除指定的数据表</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> [<span class="keyword">IF</span> <span class="keyword">EXISTS</span>] tbl_name;</div></pre></td></tr></table></figure>
+</li>
+<li><p>表结构相关操作</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 添加字段</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name </div><div class="line"><span class="keyword">ADD</span> 字段名称 字段属性 [完整性约束条件][<span class="keyword">FIRST</span>|<span class="keyword">AFTER</span>字段名称];</div><div class="line"></div><div class="line"><span class="comment">-- 删除字段</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name </div><div class="line"><span class="keyword">DROP</span> 字段名称;</div><div class="line"></div><div class="line"><span class="comment">-- 添加默认值</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name </div><div class="line"><span class="keyword">ALTER</span> 字段名称 <span class="keyword">SET</span> <span class="keyword">DEFAULT</span> 默认值;</div><div class="line"></div><div class="line"><span class="comment">-- 删除默认值</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name </div><div class="line"><span class="keyword">ALTER</span> 字段名称 <span class="keyword">DROP</span> <span class="keyword">DEFAULT</span>;</div><div class="line"></div><div class="line"><span class="comment">-- 修改字段类型、字段属性</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name </div><div class="line"><span class="keyword">MODIFY</span> 字段名称 字段类型[字段属性][<span class="keyword">FIRST</span>|<span class="keyword">AFTER</span>字段名称];</div><div class="line"></div><div class="line"><span class="comment">-- 修改字段名称、字段类型、字段属性</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name </div><div class="line"><span class="keyword">CHANGE</span> 原字段名称 新字段名称 字段类型 字段属性[<span class="keyword">FIRST</span>|<span class="keyword">AFTER</span>字段名称];</div><div class="line"></div><div class="line"><span class="comment">-- 添加主键</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name</div><div class="line"><span class="keyword">ADD</span> PRIMARY <span class="keyword">KEY</span>(字段名称);</div><div class="line"></div><div class="line"><span class="comment">-- 删除主键(如果字段属性带有AUTO_INCREMENT，则会删不掉；因此得先去掉该属性后才可删掉)</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name</div><div class="line"><span class="keyword">DROP</span> PRIMARY <span class="keyword">KEY</span>;</div><div class="line"></div><div class="line"><span class="comment">-- 添加唯一</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name</div><div class="line"><span class="keyword">ADD</span> <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span>|<span class="keyword">INDEX</span> [index_name](字段名称);</div><div class="line"></div><div class="line"><span class="comment">-- 删除唯一</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name</div><div class="line"><span class="keyword">DROP</span> <span class="keyword">INDEX</span> index_name;</div><div class="line"></div><div class="line"><span class="comment">-- 修改数据表名称</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name</div><div class="line"><span class="keyword">RENAME</span> [<span class="keyword">TO</span>|<span class="keyword">AS</span>] new_tbl_name;</div><div class="line"><span class="comment">-- 或者</span></div><div class="line"><span class="keyword">RENAME</span> <span class="keyword">TABLE</span> tbl_name <span class="keyword">TO</span> new_tbl_name;</div><div class="line"></div><div class="line"><span class="comment">-- 修改AUTO_INCREMENT的值</span></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> tbl_name AUTO_INCREMENT=值;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>MySQL中的数据类型</p>
+<ul>
+<li>数值型<ul>
+<li>整数型</li>
+<li>浮点数</li>
+<li>定点数</li>
+</ul>
+</li>
+<li>字符串类型</li>
+<li>日期时间类型</li>
+</ul>
+</li>
+<li><p>MySQL存储引擎</p>
+<ul>
+<li><p><code>MyISAM</code>存储引擎</p>
+<ul>
+<li>默认<code>MyISAM</code>的表会在磁盘中产生<code>3</code>个文件<ul>
+<li><code>.frm</code>（表结构文件）</li>
+<li><code>.MYD</code>（数据文件）</li>
+<li><code>.MYI</code>（索引文件）</li>
+</ul>
+</li>
+<li>可以在创建表的时候指定数据文件和索引文件的存储位置，只有<code>MyISAM</code>表支持<ul>
+<li><code>DATA DIRECTORY [=] 数据文件保存的绝对路径</code></li>
+<li><code>INDEX DIRECTORY [=] 索引文件保存的绝对路径</code></li>
+</ul>
+</li>
+<li><code>MyISAM</code>单表最大支持的数据量<code>2的64</code>次方条记录</li>
+<li>每个表最多可以创建<code>64</code>个索引</li>
+<li>如果是复合索引，每个复合索引最多包含<code>16</code>个列，索引值最大长度是<code>1000B</code></li>
+<li><code>MyISAM</code>引擎的存储格式<ul>
+<li><code>定长</code>（FIXED静态）：是指字段中不包含<code>VARCHAR</code>/<code>TEXT</code>/<code>BLOB</code></li>
+<li><code>动态</code>（DYNAMIC）：只要字段中包含了<code>VARCHAR</code>/<code>TEXT</code>/<code>BLOB</code></li>
+<li><code>压缩</code>（COMPRESSED）：需要<code>myisampack</code>来创建</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>InnoDB</code>存储引擎</p>
+<ul>
+<li>设计遵循<code>ACID模型</code>，支持<code>事务</code>，具有<code>从服务崩溃中恢复的能力</code>，能够<code>最大限度保护用户的数据</code><ul>
+<li><code>原子性</code>（Atomiocity）</li>
+<li><code>一致性</code>（Consistency）</li>
+<li><code>隔离性</code>（Isolation）</li>
+<li><code>持久性</code>（Durability）</li>
+</ul>
+</li>
+<li>支持<code>行级锁</code>，可以提升多用户并发时的读写性能</li>
+<li>支持<code>外键</code>，保证数据的一致性和完整性</li>
+<li><code>InnoDB</code>拥有自己独立的缓冲池，常用的数据和索引都在缓存中</li>
+<li>对于<code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code>操作，<code>InnoDB</code>会使用一种<code>change buffering</code>的机制来自动优化，还可以提供一致性的读，并且还能缓存表更的数据，减少磁盘I/O，提高性能</li>
+<li>创建<code>InnoDB</code>表之后会产生两个文件<ul>
+<li><code>.frm</code>（表结构文件）</li>
+<li><code>.ibd</code>（数据和索引存储表空间中）</li>
+</ul>
+</li>
+<li>所有的表都需要创建主键，最好是配合上<code>AUTO_INCREMENT</code>，也可以放到经常查询的列作为主键</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>MySQL数据库操作</p>
+<ul>
+<li><p>添加记录</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> [<span class="keyword">INTO</span>] tbl_name[(col_name,...)] &#123;<span class="keyword">VALUE</span>|<span class="keyword">VALUES</span>&#125;(VALUES...);</div><div class="line"></div><div class="line"><span class="comment">-- 不指定字段名称（需要按照建表时的字段顺序给每一个字段赋值）</span></div><div class="line"><span class="keyword">INSERT</span> tbl_name <span class="keyword">VALUE</span>(value...);</div><div class="line"></div><div class="line"><span class="comment">-- 列出指定字段</span></div><div class="line"><span class="keyword">INSERT</span> tbl_name(字段名称,...) <span class="keyword">VALUES</span>(值,...);</div><div class="line"></div><div class="line"><span class="comment">-- INSERT ... SET的形式</span></div><div class="line"><span class="keyword">INSERT</span> tbl_name <span class="keyword">SET</span> 字段名称=值,...;</div><div class="line"></div><div class="line"><span class="comment">-- INSERT ... SELECT的形式</span></div><div class="line"><span class="keyword">INSERT</span> tbl_name[(字段名称...)] <span class="keyword">SELECT</span> 字段名称,...FROM tbl_name [<span class="keyword">WHERE</span> 条件];</div><div class="line"></div><div class="line"><span class="comment">-- 一次添加多条记录</span></div><div class="line"><span class="keyword">INSERT</span> tbl_name[(字段名称,...)] <span class="keyword">VALUES</span>(值,...),</div><div class="line">(值,...),</div><div class="line">(值,...);</div></pre></td></tr></table></figure>
+</li>
+<li><p>修补记录</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">UPDATE</span> tbl_name <span class="keyword">SET</span> 字段名称=值,字段名称=值[<span class="keyword">WHERE</span> 条件];</div><div class="line"></div><div class="line"><span class="comment">-- 如果不添加条件，整个表中的记录都会被更新</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>删除记录</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> tbl_name [<span class="keyword">WHERE</span> 条件];</div><div class="line"></div><div class="line"><span class="comment">-- 如果不添加条件，整个表中的记录都会被删除</span></div><div class="line"></div><div class="line"><span class="comment">-- DELETE清空数据表的时候不会重置AUTO_INCREMENT的值，可以通过ALTER语句将其重置为1</span></div><div class="line"></div><div class="line"><span class="comment">-- 彻底清空数据表（1.清除表中所有记录；2.会重置AUTO_INCREMENT的值）</span></div><div class="line"><span class="keyword">TRUNCATE</span> [<span class="keyword">TABLE</span>] tbl_name;</div></pre></td></tr></table></figure>
+</li>
+<li><p>查询记录</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> select_expr,... <span class="keyword">FROM</span> tbl_name</div><div class="line">[<span class="keyword">WHERE</span> 条件]</div><div class="line">[<span class="keyword">GROUP</span> <span class="keyword">BY</span> &#123;col_name|<span class="keyword">position</span>&#125; <span class="keyword">HAVING</span> 二次筛选]</div><div class="line">[<span class="keyword">ORDER</span> <span class="keyword">BY</span> &#123;col_name|<span class="keyword">position</span>&#125; [<span class="keyword">ASC</span>|<span class="keyword">DESC</span>]]</div><div class="line">[<span class="keyword">LIMIT</span> 限制结果集的显示条数]</div><div class="line"></div><div class="line"><span class="comment">-- 查询表中所有记录（*：所有字段）</span></div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> tbl_name;</div><div class="line"></div><div class="line"><span class="comment">-- 指定字段的信息</span></div><div class="line"><span class="keyword">SELECT</span> 字段名称,... <span class="keyword">FROM</span> tbl_name;</div><div class="line"></div><div class="line"><span class="comment">-- 库名.表名</span></div><div class="line"><span class="keyword">SELECT</span> 字段名称,... <span class="keyword">FROM</span> db_name.tbl_name;</div><div class="line"></div><div class="line"><span class="comment">-- 给字段起别名</span></div><div class="line"><span class="keyword">SELECT</span> 字段名称[<span class="keyword">AS</span>]别名名称,... <span class="keyword">FROM</span> db_name.tbl_name;</div><div class="line"></div><div class="line"><span class="comment">-- 给数据表起别名</span></div><div class="line"><span class="keyword">SELECT</span> 字段名称,... <span class="keyword">FROM</span> tbl_name[<span class="keyword">AS</span>]别名名称;</div><div class="line"></div><div class="line"><span class="comment">-- 表名.字段名称</span></div><div class="line"><span class="keyword">SELECT</span> tbl_name.col_name,... <span class="keyword">FROM</span> tbl_name;</div></pre></td></tr></table></figure>
+<ul>
+<li><code>WHERE</code>条件<ul>
+<li>会筛选出符合条件的记录<ul>
+<li>比较运算符：<code>&gt;、&gt;=、&lt;、&lt;=、!=、&lt;&gt;、&lt;=&gt;</code><ul>
+<li><code>&lt;=&gt;</code>和<code>=</code> 的区别：<code>&lt;=&gt;</code>可以检测<code>NULL</code>值</li>
+</ul>
+</li>
+<li><code>IS [NOT] NULL</code>：检测值是否为<code>NULL</code>或者<code>NOT NULL</code></li>
+<li>指定范围：<code>[NOT] BETWEEN ... AND</code></li>
+<li>指定集合：<code>[NOT] IN(值,...)</code></li>
+<li>逻辑运算符<ul>
+<li><code>AND</code>（逻辑与）</li>
+<li><code>OR</code>（逻辑或）</li>
+</ul>
+</li>
+<li>匹配字符<ul>
+<li><code>[NOT] LIKE</code></li>
+<li><code>%</code>（任意长度的字符串）</li>
+<li><code>_</code>（任意一个字符）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>GROUP BY</code>分组</p>
+<ul>
+<li>把值相同放到一个组中，最终查询出的结果只会显示组中一条记录</li>
+<li>分组配合<code>GROUP_CONCAT()</code>查看组中某个字段的详细信息</li>
+<li>配合聚合函数使用<ul>
+<li><code>COUNT()</code>（统计记录总数）<ul>
+<li>如果写的是<code>COUNT(字段名称)</code>，字段中的值为<code>NULL</code>是不统计进来</li>
+<li>如果写的是<code>COUNT(*)</code>会统计<code>NULL</code>值</li>
+</ul>
+</li>
+<li><code>SUM()</code>（求和）</li>
+<li><code>MAX()</code>（求最大值）</li>
+<li><code>MIN()</code>（求最小值）</li>
+<li><code>AVG()</code>（求平均值）</li>
+</ul>
+</li>
+<li>配合<code>WITH ROLLUP</code>关键字使用<ul>
+<li>会在记录末尾添加一条记录，是上面所有记录的总和</li>
+</ul>
+</li>
+<li>可以通过字段来进行分组，也可以通过<code>index</code>来进行分组</li>
+<li><code>HAVING</code>子句对分组结果进行二次筛选<ul>
+<li><code>COUNT(*)</code> &gt;= 3 或者 <code>COUNT(*)的别名</code> &gt;= 3</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 按照性别分组，查询组中的用户名有哪些</span></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">GROUP_CONCAT</span>(username),age,sex,addr <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> sex;</div><div class="line"></div><div class="line"><span class="comment">-- 按照addr分组，得到用户名的详情，总人数，得到组中年龄的总和，年龄的最大值、最小值、平均值</span></div><div class="line"><span class="keyword">SELECT</span> addr,</div><div class="line"><span class="keyword">GROUP_CONCAT</span>(username) <span class="keyword">AS</span> userDetail,</div><div class="line"><span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> totalUsers,</div><div class="line"><span class="keyword">SUM</span>(age) <span class="keyword">AS</span> sumAge,</div><div class="line"><span class="keyword">MAX</span>(age) <span class="keyword">AS</span> maxAge,</div><div class="line"><span class="keyword">MIN</span>(age) <span class="keyword">AS</span> minAge,</div><div class="line"><span class="keyword">AVG</span>(age) <span class="keyword">as</span> avgAge</div><div class="line"><span class="keyword">FROM</span> <span class="keyword">user</span></div><div class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> addr;</div><div class="line"></div><div class="line"><span class="comment">-- WITH ROLLUP</span></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">GROUP_CONCAT</span>(username) <span class="keyword">AS</span> userDetail,</div><div class="line"><span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> totalUsers</div><div class="line"><span class="keyword">FROM</span> <span class="keyword">user</span></div><div class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> sex</div><div class="line"><span class="keyword">WITH</span> <span class="keyword">ROLLUP</span>;</div><div class="line"></div><div class="line"><span class="comment">-- HAVING子句对分组结果进行二次筛选</span></div><div class="line"><span class="keyword">SELECT</span> addr,</div><div class="line"><span class="keyword">GROUP_CONCAT</span>(username) <span class="keyword">AS</span> userDetail,</div><div class="line"><span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> totalUsers</div><div class="line"><span class="keyword">FROM</span> <span class="keyword">user</span></div><div class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> addr</div><div class="line"><span class="keyword">HAVING</span> totalUsers &gt;= <span class="number">3</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>ORDER BY</code>排序</p>
+<ul>
+<li><code>ORDER BY</code> 字段名称 <code>ASC</code>|<code>DESC</code></li>
+</ul>
+</li>
+<li><p><code>LIMIT</code>限制结果集显示条数</p>
+<ul>
+<li><code>LIMIT</code> 值：显示结果集的前几条记录</li>
+<li><code>LIMIT offset,row_count</code>：从offset开始，显示几条记录</li>
+</ul>
+</li>
+<li><p>多表查询</p>
+<ul>
+<li>笛卡尔积的形式</li>
+<li>内连接的形式<ul>
+<li>查询两个表中符合连接条件的记录</li>
+<li><code>SELECT 字段名称,... FROM tbl_name1 INNER JOIN tbl_name2 ON 连接条件;</code></li>
+</ul>
+</li>
+<li>外链接的形式<ul>
+<li>左外连接<ul>
+<li><code>SELECT 字段名称,... FROM tbl_name1 LEFT OUTER JOIN tbl_name2 ON 条件;</code></li>
+<li>先显示左表中的全部记录，再去右表中查询符合条件的记录，不符合的以<code>NULL</code>代替（以左表为主）</li>
+</ul>
+</li>
+<li>右外连接<ul>
+<li><code>SELECT 字段名称,... FROM tbl_name1 RIGHT OUTER JOIN tbl_name2 ON 条件;</code></li>
+<li>先显示右表中的全部记录，再去左表中查询符合条件的记录，不符合的以<code>NULL</code>代替（以右表为主）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 笛卡尔积（两层循环）</span></div><div class="line"><span class="keyword">SELECT</span> emp.id,emp.username,emp.age,dep.depName <span class="keyword">FROM</span> emp,dep;</div><div class="line"></div><div class="line"><span class="comment">-- 内连接的形式</span></div><div class="line"><span class="keyword">SELECT</span> e.id,e.username,e.age,d.depName</div><div class="line"><span class="keyword">FROM</span> emp <span class="keyword">AS</span> e</div><div class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> dep <span class="keyword">AS</span> d</div><div class="line"><span class="keyword">ON</span> e.depId=d.id;</div><div class="line"></div><div class="line"><span class="comment">-- 左外链接的形式（可以省略 OUTER）</span></div><div class="line"><span class="keyword">SELECT</span> e.id,e.username,e.age,d.depName</div><div class="line"><span class="keyword">FROM</span> emp <span class="keyword">AS</span> e</div><div class="line"><span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> dep <span class="keyword">AS</span> d</div><div class="line"><span class="keyword">ON</span> e.depId=d.id;</div><div class="line"></div><div class="line"><span class="comment">-- 右外链接的形式（可以省略 OUTER）</span></div><div class="line"><span class="keyword">SELECT</span> e.id,e.username,e.age,d.depName</div><div class="line"><span class="keyword">FROM</span> emp <span class="keyword">AS</span> e</div><div class="line"><span class="keyword">RIGHT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> dep <span class="keyword">AS</span> d</div><div class="line"><span class="keyword">ON</span> e.depId=d.id;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>数据表的创建</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 创建kaiyu表</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> fengche <span class="keyword">DEFAULT</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> <span class="string">'UTF8'</span>;</div><div class="line"></div><div class="line"><span class="comment">-- 打开kaiyu表</span></div><div class="line"><span class="keyword">USE</span> kaiyu</div><div class="line"></div><div class="line"><span class="comment">-- 用户表 user</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> <span class="keyword">user</span> (</div><div class="line">    <span class="keyword">id</span> <span class="built_in">INT</span>,</div><div class="line">    username <span class="built_in">VARCHAR</span>(<span class="number">20</span>),</div><div class="line">    <span class="keyword">password</span> <span class="built_in">CHAR</span>(<span class="number">32</span>),</div><div class="line">    emial <span class="built_in">VARCHAR</span>(<span class="number">50</span>),</div><div class="line">    age TINYINT,</div><div class="line">    card <span class="built_in">CHAR</span>(<span class="number">18</span>),</div><div class="line">    tel <span class="built_in">CHAR</span>(<span class="number">11</span>),</div><div class="line">    salary <span class="built_in">FLOAT</span>(<span class="number">8</span>,<span class="number">2</span>),</div><div class="line">    married TINYINT(<span class="number">1</span>),</div><div class="line">    addr <span class="built_in">VARCHAR</span>(<span class="number">100</span>),</div><div class="line">    sex ENUM(<span class="string">'男'</span>, <span class="string">'女'</span>, <span class="string">'保密'</span>)</div><div class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span> <span class="keyword">CHARSET</span>=UTF8;</div><div class="line"></div><div class="line"><span class="comment">-- INSERT [INTO] tbl_name(id,username,...) VALUES(1,'dhuang',...);</span></div><div class="line"><span class="comment">-- 向user表中插入一条记录</span></div><div class="line"><span class="keyword">INSERT</span> <span class="keyword">user</span>(<span class="keyword">id</span>,username,<span class="keyword">password</span>,email,age,card,tel,salary,married,addr,sex)</div><div class="line"><span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="string">'dhuang'</span>,<span class="string">'123456'</span>,<span class="string">'154298331@qq.com'</span>,<span class="number">24</span>,<span class="string">'194958683948235864'</span>,<span class="string">'15829341542'</span>,<span class="number">88888.68</span>,<span class="number">0</span>,<span class="string">'深圳'</span>,<span class="string">'男'</span>);</div><div class="line"></div><div class="line"><span class="comment">-- 查询表中所有记录</span></div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> tbl_name;</div></pre></td></tr></table></figure>
+</li>
+<li><p>测试插入的数据</p>
+<ul>
+<li>整型<br>  超过会被截断</li>
+<li>浮点型<br>  <code>DECIMAL[(M,D)]</code>，小数位<code>D</code>不指定，则会截断为整型</li>
+<li>字符串类型<ul>
+<li><code>CHAR</code>效率高于<code>VARCHAR</code>，<code>CHAR</code>相当于拿空间换时间，<code>VARCHAR</code>拿时间换空间</li>
+<li><code>CHAR</code>默认存储数据的时候，后面会用空格填充到指定长度，而检索的时候会去掉后面的空格；<code>VARCHAR</code>在保存数据的时候不进行填充，尾部的空格会留下</li>
+<li><code>TEXT</code>列不能有默认值，检索的会后不存在大小写转换</li>
+<li><code>枚举类型</code>插入序号也是可以的，如：<code>ENUM(&#39;男&#39;, &#39;女&#39;, &#39;保密&#39;)</code>，则<code>男</code>对应的序号是<code>1</code>；<code>枚举类型</code>会自动过滤掉空格。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>完善用户表user</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> <span class="string">`user`</span>(</div><div class="line">    <span class="string">`id`</span> <span class="built_in">INT</span> <span class="keyword">UNSIGNED</span> AUTO_INCREAMENT <span class="keyword">KEY</span> <span class="keyword">COMMENT</span> <span class="string">'用户编号'</span>,</div><div class="line">    <span class="string">`username`</span> <span class="built_in">VARCHAR</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">UNIQUE</span> <span class="keyword">COMMENT</span> <span class="string">'用户名'</span>,</div><div class="line">    <span class="string">`password`</span> <span class="built_in">CHAR</span>(<span class="number">32</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'密码'</span>,</div><div class="line">    <span class="string">`email`</span> <span class="built_in">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">UNIQUE</span> <span class="keyword">COMMENT</span> <span class="string">'邮箱'</span>,</div><div class="line">    <span class="string">`age`</span> TINYINT <span class="keyword">UNSIGNED</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">18</span> <span class="keyword">COMMENT</span> <span class="string">'年龄'</span>,</div><div class="line">    <span class="string">`sex`</span> ENUM(<span class="string">'男'</span>, <span class="string">'女'</span>, <span class="string">'保密'</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">'保密'</span> <span class="keyword">COMMENT</span> <span class="string">'性别'</span>,</div><div class="line">    <span class="string">`tel`</span> <span class="built_in">CHAR</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">UNIQUE</span> <span class="keyword">COMMENT</span> <span class="string">'电话'</span>,</div><div class="line">    <span class="string">`addr`</span> <span class="built_in">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">'深圳'</span> <span class="keyword">COMMENT</span> <span class="string">'地址'</span>,</div><div class="line">    <span class="string">`card`</span> <span class="built_in">CHAR</span>(<span class="number">18</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">UNIQUE</span> <span class="keyword">COMMENT</span> <span class="string">'身份证号'</span>,</div><div class="line">    <span class="string">`married`</span> TINYINT(<span class="number">1</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">COMMENT</span> <span class="string">'0代表未婚，1代表已婚'</span>,</div><div class="line">    <span class="string">`salary`</span> <span class="built_in">FLOAT</span>(<span class="number">8</span>,<span class="number">2</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">COMMENT</span> <span class="string">'薪水'</span></div><div class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=UTF8;</div></pre></td></tr></table></figure></li>
+</ol>
+
+          
+        
+      
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2333,7 +2592,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2355,7 +2614,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
